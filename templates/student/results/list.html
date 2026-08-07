@@ -1,58 +1,129 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Examination Results - MMCOE Online Exam Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
 
-{% block title %}My Examination Results - Online Exam Platform{% endblock %}
+  <div class="app-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <i class="bi bi-mortarboard-fill"></i>
+          <span>MMCOE Exam</span>
+        </a>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Student Portal</div>
+        <div class="nav-item">
+          <a href="/templates/student/dashboard.html" class="nav-link">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/templates/student/exams/available.html" class="nav-link">
+            <i class="bi bi-journal-check"></i>
+            <span>Available Exams</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/templates/student/results/list.html" class="nav-link active">
+            <i class="bi bi-trophy-fill"></i>
+            <span>My Results</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/templates/notifications/center.html" class="nav-link">
+            <i class="bi bi-bell-fill"></i>
+            <span>Notifications</span>
+          </a>
+        </div>
+      </div>
+    </aside>
 
-{% block content %}
-<div class="d-flex align-items-center justify-content-between mb-4">
-  <div>
-    <h3 class="fw-bold m-0">My Examination Results</h3>
-    <p class="text-muted small m-0">View all your published grades, marksheets, and evaluations</p>
+    <div class="main-content">
+      <header class="top-navbar">
+        <div class="navbar-search">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search results...">
+        </div>
+        <div class="navbar-actions">
+          <div class="dropdown">
+            <div class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <div class="avatar" style="background: linear-gradient(135deg, var(--mmcoe-maroon), var(--mmcoe-navy));">S</div>
+              <div class="user-info">
+                <span class="user-name">Rutuja / Shlok</span>
+                <span class="user-role">Student</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h3 class="fw-bold m-0">My Examination Results</h3>
+            <p class="text-muted small m-0">View all your published grades, marksheets, and evaluations</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-4">
+          <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+              <thead>
+                <tr class="text-muted small">
+                  <th>Result ID</th>
+                  <th>Exam Title</th>
+                  <th>Percentage</th>
+                  <th>Grade</th>
+                  <th>Status</th>
+                  <th>Published Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="font-monospace">RES-001</span></td>
+                  <td class="fw-semibold">DBMS Mid-Term Assessment</td>
+                  <td><strong class="text-emerald">100.00%</strong></td>
+                  <td><span class="badge bg-primary">A+</span></td>
+                  <td><span class="badge bg-success">PASSED</span></td>
+                  <td class="text-muted small">Today, 02:45 PM</td>
+                  <td>
+                    <a href="/templates/student/results/detail.html" class="btn btn-sm btn-outline-info">
+                      <i class="bi bi-eye"></i> View Scorecard
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="font-monospace">RES-002</span></td>
+                  <td class="fw-semibold">Operating Systems Unit Test</td>
+                  <td><strong class="text-emerald">85.00%</strong></td>
+                  <td><span class="badge bg-primary">A</span></td>
+                  <td><span class="badge bg-success">PASSED</span></td>
+                  <td class="text-muted small">2 days ago</td>
+                  <td>
+                    <a href="/templates/student/results/detail.html" class="btn btn-sm btn-outline-info">
+                      <i class="bi bi-eye"></i> View Scorecard
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
-</div>
 
-<div class="glass-card p-4">
-  <div class="table-responsive">
-    <table class="table table-dark table-hover align-middle">
-      <thead>
-        <tr class="text-muted small">
-          <th>Result ID</th>
-          <th>Exam Title</th>
-          <th>Percentage</th>
-          <th>Grade</th>
-          <th>Status</th>
-          <th>Published Date</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="font-monospace">RES-001</span></td>
-          <td class="fw-semibold">DBMS Mid-Term Assessment</td>
-          <td><strong class="text-emerald">100.00%</strong></td>
-          <td><span class="badge bg-primary">A+</span></td>
-          <td><span class="badge bg-success">PASSED</span></td>
-          <td class="text-muted small">Today, 02:45 PM</td>
-          <td>
-            <a href="/student/results/detail.html" class="btn btn-sm btn-outline-info">
-              <i class="bi bi-eye"></i> View Scorecard
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><span class="font-monospace">RES-002</span></td>
-          <td class="fw-semibold">Operating Systems Unit Test</td>
-          <td><strong class="text-emerald">85.00%</strong></td>
-          <td><span class="badge bg-primary">A</span></td>
-          <td><span class="badge bg-success">PASSED</span></td>
-          <td class="text-muted small">2 days ago</td>
-          <td>
-            <a href="/student/results/detail.html" class="btn btn-sm btn-outline-info">
-              <i class="bi bi-eye"></i> View Scorecard
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-{% endblock %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
