@@ -1,0 +1,37 @@
+/* ==========================================================================
+   LIVE EXAMINATION TIMER LOGIC
+   ========================================================================== */
+
+let totalSeconds = 3600; // 60 minutes default
+let timerInterval = null;
+
+function startExamTimer(durationMinutes, displayElementId, onExpireCallback) {
+  totalSeconds = durationMinutes * 60;
+  const displayElement = document.getElementById(displayElementId);
+
+  updateTimerDisplay(displayElement);
+
+  timerInterval = setInterval(() => {
+    totalSeconds--;
+
+    updateTimerDisplay(displayElement);
+
+    if (totalSeconds <= 300 && totalSeconds > 0) { // 5 minutes warning
+      displayElement.classList.add('bg-danger', 'text-white');
+    }
+
+    if (totalSeconds <= 0) {
+      clearInterval(timerInterval);
+      if (typeof onExpireCallback === 'function') {
+        onExpireCallback();
+      }
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(element) {
+  if (!element) return;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  element.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}

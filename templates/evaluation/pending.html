@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Evaluations - Faculty Portal{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold m-0">Evaluation & Grading Queue</h3>
+    <p class="text-muted small m-0">Review auto-graded objective questions and grade descriptive/coding submissions</p>
+  </div>
+</div>
+
+<div class="glass-card p-4">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle">
+      <thead>
+        <tr class="text-muted small">
+          <th>Attempt ID</th>
+          <th>Student Name</th>
+          <th>Exam Title</th>
+          <th>Submitted Time</th>
+          <th>Auto Score</th>
+          <th>Evaluation Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="font-monospace">ATTEMPT-001</span></td>
+          <td class="fw-semibold">Rutuja Ghodekar</td>
+          <td>DBMS Mid-Term Assessment</td>
+          <td>Today, 02:30 PM</td>
+          <td><strong class="text-emerald">100.00 / 100.00</strong></td>
+          <td><span class="badge bg-info">AUTO_EVALUATED</span></td>
+          <td>
+            <a href="/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">Review & Finalize</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="font-monospace">ATTEMPT-002</span></td>
+          <td class="fw-semibold">Shlok Powar</td>
+          <td>DBMS Mid-Term Assessment</td>
+          <td>Today, 02:35 PM</td>
+          <td><strong class="text-emerald">90.00 / 100.00</strong></td>
+          <td><span class="badge bg-warning text-dark">PENDING_REVIEW</span></td>
+          <td>
+            <a href="/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">Review & Finalize</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

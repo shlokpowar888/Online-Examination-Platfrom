@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Question Bank - Online Exam Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold m-0">Question Bank Repository</h3>
+    <p class="text-muted small m-0">Manage reusable question pools, options, categories, and difficulty levels</p>
+  </div>
+  <a href="/questions/create.html" class="btn btn-primary-custom">
+    <i class="bi bi-plus-lg"></i> Create Question
+  </a>
+</div>
+
+<div class="glass-card p-4">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle">
+      <thead>
+        <tr class="text-muted small">
+          <th>ID</th>
+          <th>Question Text</th>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Difficulty</th>
+          <th>Default Marks</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#1</td>
+          <td class="fw-semibold">Which SQL clause is used to filter records in a SELECT statement?</td>
+          <td><span class="badge bg-primary">MCQ</span></td>
+          <td>SQL Queries</td>
+          <td><span class="badge bg-success">Easy</span></td>
+          <td>50.00</td>
+          <td>
+            <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>#2</td>
+          <td class="fw-semibold">Which of the following are ACID properties in DBMS? (Select all that apply)</td>
+          <td><span class="badge bg-purple" style="background-color: var(--accent-purple);">MSQ</span></td>
+          <td>Database Concepts</td>
+          <td><span class="badge bg-warning text-dark">Medium</span></td>
+          <td>50.00</td>
+          <td>
+            <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

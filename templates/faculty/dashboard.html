@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Dashboard - Online Examination Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold m-0">Faculty Portal — Dr. Rajesh Sharma 👋</h3>
+    <p class="text-muted small m-0">Question bank management, exam creation, and submission evaluation</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/questions/create.html" class="btn btn-outline-info">
+      <i class="bi bi-plus-lg"></i> Add Question
+    </a>
+    <a href="/exams/create.html" class="btn btn-primary-custom">
+      <i class="bi bi-journal-plus"></i> Design Exam
+    </a>
+  </div>
+</div>
+
+<!-- Faculty Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon blue"><i class="bi bi-question-square-fill"></i></div>
+      <div class="stat-info">
+        <h3>25</h3>
+        <p>Question Bank</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon purple"><i class="bi bi-card-checklist"></i></div>
+      <div class="stat-info">
+        <h3>3</h3>
+        <p>Exams Designed</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon amber"><i class="bi bi-pencil-square"></i></div>
+      <div class="stat-info">
+        <h3>2</h3>
+        <p>Pending Evaluations</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon emerald"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-info">
+        <h3>2</h3>
+        <p>Students Enrolled</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Enrolled Students & Recent Submissions Overview -->
+<div class="glass-card p-4 mb-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h5 class="fw-bold m-0"><i class="bi bi-people-fill text-info me-2"></i>Enrolled Students & Submissions</h5>
+    <a href="/evaluation/pending.html" class="small text-info">View Evaluation Queue &rarr;</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle">
+      <thead>
+        <tr class="text-muted small">
+          <th>Student Name</th>
+          <th>Email Address</th>
+          <th>Registered Exam</th>
+          <th>Attempt Status</th>
+          <th>Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fw-semibold">Rutuja Ghodekar</td>
+          <td>rutuja.student@college.edu</td>
+          <td>DBMS Mid-Term Assessment</td>
+          <td><span class="badge bg-success">SUBMITTED</span></td>
+          <td><strong class="text-emerald">100.00 / 100.00</strong></td>
+          <td>
+            <a href="/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">
+              <i class="bi bi-pencil-square me-1"></i> Evaluate
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td class="fw-semibold">Shlok Powar</td>
+          <td>shlok.powar@college.edu</td>
+          <td>DBMS Mid-Term Assessment</td>
+          <td><span class="badge bg-warning text-dark">SUBMITTED</span></td>
+          <td><strong class="text-emerald">90.00 / 100.00</strong></td>
+          <td>
+            <a href="/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">
+              <i class="bi bi-pencil-square me-1"></i> Evaluate
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Quick Links & Actions -->
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Quick Tasks</h5>
+      <div class="d-flex flex-column gap-2">
+        <a href="/questions/create.html" class="p-3 bg-dark rounded border border-secondary text-white text-decoration-none d-flex align-items-center justify-content-between">
+          <div>
+            <strong>Add New MCQ / MSQ Question</strong>
+            <div class="small text-muted">Centralized Question Bank (Question table)</div>
+          </div>
+          <i class="bi bi-chevron-right text-muted"></i>
+        </a>
+        <a href="/evaluation/pending.html" class="p-3 bg-dark rounded border border-secondary text-white text-decoration-none d-flex align-items-center justify-content-between">
+          <div>
+            <strong>Evaluate Student Attempts (2 Pending)</strong>
+            <div class="small text-muted">Review auto-evaluations for Rutuja and Shlok</div>
+          </div>
+          <i class="bi bi-chevron-right text-muted"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3"><i class="bi bi-book-fill text-info me-2"></i>Assigned Subjects</h5>
+      <div class="p-3 bg-dark rounded border border-secondary mb-2 d-flex justify-content-between align-items-center">
+        <div>
+          <strong class="font-monospace text-info me-2">CS101</strong>
+          <span>Database Management Systems</span>
+        </div>
+        <span class="badge bg-secondary">4 Credits</span>
+      </div>
+      <div class="p-3 bg-dark rounded border border-secondary d-flex justify-content-between align-items-center">
+        <div>
+          <strong class="font-monospace text-info me-2">CS102</strong>
+          <span>Full Stack Web Development</span>
+        </div>
+        <span class="badge bg-secondary">4 Credits</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

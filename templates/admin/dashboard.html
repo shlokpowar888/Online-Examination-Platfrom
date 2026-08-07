@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Online Examination Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold m-0">System Control Center</h3>
+    <p class="text-muted small m-0">Platform overview, active sessions, audit logs, and performance metrics</p>
+  </div>
+  <a href="/admin/users/list.html" class="btn btn-primary-custom">
+    <i class="bi bi-person-plus-fill"></i> Add User
+  </a>
+</div>
+
+<!-- Admin Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-info">
+        <h3>3</h3>
+        <p>Total Users</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon emerald"><i class="bi bi-broadcast"></i></div>
+      <div class="stat-info">
+        <h3>1</h3>
+        <p>Active Sessions</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon purple"><i class="bi bi-journal-check"></i></div>
+      <div class="stat-info">
+        <h3>2</h3>
+        <p>Subjects</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon amber"><i class="bi bi-speedometer2"></i></div>
+      <div class="stat-info">
+        <h3>12.45 ms</h3>
+        <p>DB Latency</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- System Health & Audit Preview Row -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3"><i class="bi bi-activity text-info me-2"></i>Active Sessions (UserSession)</h5>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle small">
+          <thead>
+            <tr class="text-muted">
+              <th>User</th>
+              <th>IP Address</th>
+              <th>Device</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rutuja Ghodekar (Student)</td>
+              <td>192.168.1.15</td>
+              <td>Desktop</td>
+              <td><span class="badge bg-success">ACTIVE</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-3"><i class="bi bi-shield-check text-warning me-2"></i>System Audit Log (AuditLog)</h5>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle small">
+          <thead>
+            <tr class="text-muted">
+              <th>Entity</th>
+              <th>Action</th>
+              <th>IP Address</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Result #1</td>
+              <td><span class="badge bg-primary">CREATE</span></td>
+              <td>192.168.1.10</td>
+              <td class="text-muted">Just now</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
