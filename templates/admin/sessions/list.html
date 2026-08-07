@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Active User Sessions - MMCOE Admin Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <i class="bi bi-mortarboard-fill"></i>
+          <span>MMCOE Exam</span>
+        </a>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Administrator Portal</div>
+        <div class="nav-item">
+          <a href="/templates/admin/dashboard.html" class="nav-link">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/templates/admin/sessions/list.html" class="nav-link active">
+            <i class="bi bi-laptop-fill"></i>
+            <span>Active Sessions</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="top-navbar">
+        <div class="navbar-search">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search active sessions...">
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/templates/admin/dashboard.html">Admin</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Active Sessions</li>
+          </ol>
+        </nav>
+
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h3 class="fw-bold m-0">Active User Sessions (UserSession Table)</h3>
+            <p class="text-muted small m-0">Monitor stateful sessions, UUID session keys, and invalidate active tokens</p>
+          </div>
+        </div>
+
+        <div class="glass-card p-4">
+          <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle small">
+              <thead>
+                <tr class="text-muted">
+                  <th>Session UUID (sessionId)</th>
+                  <th>User ID / Name</th>
+                  <th>IP Address</th>
+                  <th>Device / Agent</th>
+                  <th>Expires At</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code class="text-info">a3b8c9d0-1234-5678-9abc-def012345678</code></td>
+                  <td class="fw-semibold text-white">#3 (Rutuja Ghodekar)</td>
+                  <td class="font-monospace">192.168.1.50</td>
+                  <td class="text-muted">Chrome / Windows 11</td>
+                  <td class="text-muted">Today, 03:30 PM</td>
+                  <td><span class="status-badge badge-active">ACTIVE</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger" onclick="showToast('Session invalidated successfully!', 'warning')">
+                      Invalidate
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

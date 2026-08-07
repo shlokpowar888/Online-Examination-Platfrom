@@ -38,23 +38,57 @@
       </header>
 
       <main class="content-body">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Notification Center</li>
+          </ol>
+        </nav>
+
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div>
-            <h3 class="fw-bold m-0">Notification Center</h3>
+            <h3 class="fw-bold m-0">Notification Center (Notification Table)</h3>
             <p class="text-muted small m-0">System alerts, exam schedules, and result notifications</p>
           </div>
+          <button class="btn btn-outline-info" onclick="showToast('All notifications marked as read', 'success')">
+            <i class="bi bi-check-all"></i> Mark All as Read
+          </button>
         </div>
 
-        <div class="glass-card p-4" style="max-width: 800px;">
+        <div class="glass-card p-4" style="max-width: 850px;">
           <div class="list-group list-group-flush">
+            
             <div class="list-group-item bg-transparent text-white border-secondary p-3">
               <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="badge bg-success">RESULT</span>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-success">RESULT</span>
+                  <span class="badge bg-danger">HIGH PRIORITY</span>
+                </div>
                 <small class="text-muted">Today, 02:45 PM</small>
               </div>
-              <h6 class="fw-bold mb-1">Exam Result Available</h6>
-              <p class="text-muted small mb-0">Dear Student, your result for DBMS Mid-Term Assessment is now available.</p>
+              <h6 class="fw-bold mb-1 text-white">Exam Result Available — DBMS Mid-Term Assessment</h6>
+              <p class="text-muted small mb-2">Dear Student, your result for DBMS Mid-Term Assessment (EXAM-DBMS-MID) has been published with grade A+ (100.00%).</p>
+              <button class="btn btn-sm btn-outline-secondary" onclick="showToast('Notification read status updated', 'info')">
+                <i class="bi bi-check2"></i> Mark as Read
+              </button>
             </div>
+
+            <div class="list-group-item bg-transparent text-white border-secondary p-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-info">EXAM</span>
+                  <span class="badge bg-secondary">NORMAL PRIORITY</span>
+                </div>
+                <small class="text-muted">Yesterday, 10:00 AM</small>
+              </div>
+              <h6 class="fw-bold mb-1 text-white">Registration Opened — Full Stack Web Dev Assessment</h6>
+              <p class="text-muted small mb-2">Registration is now open for EXAM-FSWD-FINAL. Register before the deadline tomorrow.</p>
+              <button class="btn btn-sm btn-outline-secondary" onclick="showToast('Notification read status updated', 'info')">
+                <i class="bi bi-check2"></i> Mark as Read
+              </button>
+            </div>
+
           </div>
         </div>
       </main>

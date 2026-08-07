@@ -49,131 +49,137 @@
       border-color: var(--mmcoe-maroon);
       color: var(--text-main);
     }
-    .role-nav-btn.active i {
-      color: #f43f5e;
-    }
   </style>
 </head>
 <body>
 
   <div class="glass-card auth-card">
     <div class="text-center mb-4">
-      <div class="sidebar-brand justify-content-center mb-1 fs-3">
-        <i class="bi bi-mortarboard-fill" style="color: var(--mmcoe-maroon);"></i>
-        <span>MMCOE ExamPortal</span>
+      <div class="d-inline-flex align-items-center justify-content-center bg-dark p-3 rounded-circle border border-secondary mb-3">
+        <i class="bi bi-mortarboard-fill text-danger fs-2"></i>
       </div>
-      <p class="text-muted small mb-3">Marathwada Mitra Mandal's College of Engineering</p>
+      <h3 class="fw-bold mb-1">MMCOE ExamPortal</h3>
+      <p class="text-muted small">Marathwada Mitra Mandal's College of Engineering</p>
+    </div>
 
-      <!-- 3 Role Selector Options -->
-      <div class="d-flex gap-2 p-1 bg-dark rounded border border-secondary mb-3">
-        <button type="button" class="role-nav-btn active" id="btnStudent" onclick="selectRole('student')">
-          <i class="bi bi-person-badge-fill"></i> Student
+    <!-- Account Locked Alert (hidden by default) -->
+    <div id="accountLockedAlert" class="alert alert-danger d-none small mb-3">
+      <i class="bi bi-shield-lock-fill me-1"></i> Account locked due to excessive failed login attempts. Contact administrator.
+    </div>
+
+    <!-- Role Quick Switcher -->
+    <div class="mb-4">
+      <label class="form-label small text-muted fw-semibold">Select Role / Demo Account</label>
+      <div class="d-flex gap-2">
+        <button type="button" class="role-nav-btn active" id="btn-student" onclick="setRole('student')">
+          <i class="bi bi-person-fill"></i> Student
         </button>
-        <button type="button" class="role-nav-btn" id="btnFaculty" onclick="selectRole('faculty')">
-          <i class="bi bi-mortarboard"></i> Faculty
+        <button type="button" class="role-nav-btn" id="btn-faculty" onclick="setRole('faculty')">
+          <i class="bi bi-person-badge-fill"></i> Faculty
         </button>
-        <button type="button" class="role-nav-btn" id="btnAdmin" onclick="selectRole('admin')">
+        <button type="button" class="role-nav-btn" id="btn-admin" onclick="setRole('admin')">
           <i class="bi bi-shield-lock-fill"></i> Admin
         </button>
       </div>
     </div>
 
-    <!-- Quick Demo Student Switcher -->
-    <div id="studentSelectWrapper" class="mb-3 p-2 bg-dark rounded border border-secondary">
-      <label class="form-label small text-muted mb-1">Select Student Demo Account:</label>
-      <select class="form-select form-control-custom form-select-sm" id="studentPicker" onchange="switchStudentUser()">
+    <!-- Student Select Picker (Rutuja vs Shlok) -->
+    <div id="studentPickerContainer" class="mb-3">
+      <label class="form-label small text-muted fw-semibold">Select Student Profile</label>
+      <select class="form-select form-control-custom" id="studentSelect" onchange="updateStudentCredentials()">
         <option value="rutuja">Rutuja Ghodekar (rutuja.student@college.edu)</option>
         <option value="shlok">Shlok Powar (shlok.powar@college.edu)</option>
       </select>
     </div>
 
-    <form id="loginForm" action="/student/dashboard.html" method="GET">
+    <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="mb-3">
-        <label class="form-label small fw-semibold">Email Address</label>
+        <label for="email" class="form-label small fw-semibold">Email Address</label>
         <div class="input-group">
-          <span class="input-group-text bg-transparent border-secondary text-muted"><i class="bi bi-envelope"></i></span>
-          <input type="email" id="emailInput" class="form-control form-control-custom" placeholder="name@college.edu" required value="rutuja.student@college.edu">
+          <span class="input-group-text bg-dark border-secondary text-muted"><i class="bi bi-envelope"></i></span>
+          <input type="email" class="form-control form-control-custom" id="email" value="rutuja.student@college.edu" required>
         </div>
       </div>
 
       <div class="mb-3">
         <div class="d-flex justify-content-between align-items-center mb-1">
-          <label class="form-label small fw-semibold mb-0">Password</label>
-          <a href="/auth/forgot_password.html" class="small text-danger">Forgot?</a>
+          <label for="password" class="form-label small fw-semibold m-0">Password</label>
+          <a href="/templates/auth/forgot_password.html" class="text-info small text-decoration-none">Forgot Password?</a>
         </div>
         <div class="input-group">
-          <span class="input-group-text bg-transparent border-secondary text-muted"><i class="bi bi-lock"></i></span>
-          <input type="password" class="form-control form-control-custom" placeholder="••••••••" required value="hashedstudentpass">
+          <span class="input-group-text bg-dark border-secondary text-muted"><i class="bi bi-lock"></i></span>
+          <input type="password" class="form-control form-control-custom" id="password" value="password123" required>
+          <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password', 'passIcon')">
+            <i class="bi bi-eye" id="passIcon"></i>
+          </button>
         </div>
       </div>
 
-      <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" id="remember">
-        <label class="form-check-label small text-muted" for="remember">Remember me for 30 days</label>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+          <label class="form-check-label small text-muted" for="rememberMe">Remember me</label>
+        </div>
       </div>
 
-      <button type="submit" id="submitBtn" class="btn btn-primary-custom w-100 justify-content-center py-2.5 mb-3">
-        Sign In as Student <i class="bi bi-arrow-right"></i>
+      <button type="submit" class="btn btn-primary-custom w-100 py-2.5 justify-content-center fs-6">
+        <i class="bi bi-box-arrow-in-right"></i> Sign In to Portal
       </button>
     </form>
 
-    <div class="text-center mt-3">
-      <span class="text-muted small">Don't have an account? </span>
-      <a href="/auth/register.html" class="small fw-bold text-danger">Register here</a>
+    <div class="text-center mt-4 border-top border-secondary pt-3">
+      <span class="text-muted small">New student?</span>
+      <a href="/templates/auth/register.html" class="text-info small fw-semibold text-decoration-none ms-1">Register Account</a>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/app.js"></script>
   <script>
-    const roles = {
-      student: {
-        email: 'rutuja.student@college.edu',
-        action: '/student/dashboard.html',
-        label: 'Sign In as Student'
-      },
-      faculty: {
-        email: 'rajesh.sharma@college.edu',
-        action: '/faculty/dashboard.html',
-        label: 'Sign In as Faculty'
-      },
-      admin: {
-        email: 'admin@platform.com',
-        action: '/admin/dashboard.html',
-        label: 'Sign In as Administrator'
-      }
-    };
+    let currentRole = 'student';
+    let targetUrl = '/templates/student/dashboard.html';
 
-    function selectRole(roleKey) {
-      document.querySelectorAll('.role-nav-btn').forEach(btn => btn.classList.remove('active'));
-      if (roleKey === 'student') {
-        document.getElementById('btnStudent').classList.add('active');
-        document.getElementById('studentSelectWrapper').classList.remove('d-none');
-        switchStudentUser();
-      }
-      if (roleKey === 'faculty') {
-        document.getElementById('btnFaculty').classList.add('active');
-        document.getElementById('studentSelectWrapper').classList.add('d-none');
-        document.getElementById('emailInput').value = roles.faculty.email;
-        document.getElementById('loginForm').action = roles.faculty.action;
-        document.getElementById('submitBtn').innerHTML = `${roles.faculty.label} <i class="bi bi-arrow-right"></i>`;
-      }
-      if (roleKey === 'admin') {
-        document.getElementById('btnAdmin').classList.add('active');
-        document.getElementById('studentSelectWrapper').classList.add('d-none');
-        document.getElementById('emailInput').value = roles.admin.email;
-        document.getElementById('loginForm').action = roles.admin.action;
-        document.getElementById('submitBtn').innerHTML = `${roles.admin.label} <i class="bi bi-arrow-right"></i>`;
+    function setRole(role) {
+      currentRole = role;
+      document.getElementById('btn-student').classList.remove('active');
+      document.getElementById('btn-faculty').classList.remove('active');
+      document.getElementById('btn-admin').classList.remove('active');
+      document.getElementById(`btn-${role}`).classList.add('active');
+
+      const studentPicker = document.getElementById('studentPickerContainer');
+      const emailInput = document.getElementById('email');
+
+      if (role === 'student') {
+        studentPicker.classList.remove('d-none');
+        updateStudentCredentials();
+        targetUrl = '/templates/student/dashboard.html';
+      } else if (role === 'faculty') {
+        studentPicker.classList.add('d-none');
+        emailInput.value = 'rajesh.sharma@college.edu';
+        targetUrl = '/templates/faculty/dashboard.html';
+      } else if (role === 'admin') {
+        studentPicker.classList.add('d-none');
+        emailInput.value = 'admin@platform.com';
+        targetUrl = '/templates/admin/dashboard.html';
       }
     }
 
-    function switchStudentUser() {
-      const pickerVal = document.getElementById('studentPicker').value;
-      if (pickerVal === 'shlok') {
-        document.getElementById('emailInput').value = 'shlok.powar@college.edu';
+    function updateStudentCredentials() {
+      const studentVal = document.getElementById('studentSelect').value;
+      const emailInput = document.getElementById('email');
+      if (studentVal === 'shlok') {
+        emailInput.value = 'shlok.powar@college.edu';
       } else {
-        document.getElementById('emailInput').value = 'rutuja.student@college.edu';
+        emailInput.value = 'rutuja.student@college.edu';
       }
-      document.getElementById('loginForm').action = '/student/dashboard.html';
-      document.getElementById('submitBtn').innerHTML = `Sign In as Student <i class="bi bi-arrow-right"></i>`;
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      showToast('Authenticating with Argon2id...', 'info');
+      setTimeout(() => {
+        window.location.href = targetUrl;
+      }, 500);
     }
   </script>
 </body>

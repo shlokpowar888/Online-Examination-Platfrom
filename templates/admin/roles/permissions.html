@@ -27,6 +27,12 @@
           </a>
         </div>
         <div class="nav-item">
+          <a href="/templates/admin/users/list.html" class="nav-link">
+            <i class="bi bi-people-fill"></i>
+            <span>User Management</span>
+          </a>
+        </div>
+        <div class="nav-item">
           <a href="/templates/admin/roles/permissions.html" class="nav-link active">
             <i class="bi bi-shield-lock-fill"></i>
             <span>RBAC Matrix</span>
@@ -44,32 +50,40 @@
       </header>
 
       <main class="content-body">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/templates/admin/dashboard.html">Admin</a></li>
+            <li class="breadcrumb-item active" aria-current="page">RBAC Permission Matrix</li>
+          </ol>
+        </nav>
+
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div>
-            <h3 class="fw-bold m-0">RBAC Permission Matrix</h3>
-            <p class="text-muted small m-0">Role-Based Access Control mapping (RolePermission junction table)</p>
+            <h3 class="fw-bold m-0">RBAC Permission Mapping Matrix</h3>
+            <p class="text-muted small m-0">Map fine-grained permissions to system roles (RolePermission Junction Table)</p>
           </div>
-          <button class="btn btn-primary-custom" onclick="showToast('Permission changes saved successfully!', 'success')">
+          <button class="btn btn-primary-custom" onclick="showToast('RBAC Matrix updated successfully!', 'success')">
             <i class="bi bi-save-fill"></i> Save Permissions
           </button>
         </div>
 
         <div class="glass-card p-4 mb-4">
           <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle text-center">
+            <table class="table table-dark table-hover align-middle text-center small">
               <thead>
-                <tr class="text-muted small text-start">
-                  <th style="width: 30%;">Permission Name & Module</th>
-                  <th style="width: 20%;">Admin (ID: 1)</th>
-                  <th style="width: 20%;">Faculty (ID: 2)</th>
-                  <th style="width: 20%;">Student (ID: 3)</th>
+                <tr class="text-muted text-start">
+                  <th style="width: 35%;">Permission & Module Name</th>
+                  <th style="width: 20%;">Admin (Role ID: 1)</th>
+                  <th style="width: 20%;">Faculty (Role ID: 2)</th>
+                  <th style="width: 20%;">Student (Role ID: 3)</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="text-start">
                     <div class="fw-bold text-white">CREATE_EXAM</div>
-                    <div class="small text-muted">Module: ExamModule &bull; Allows creating new exam templates</div>
+                    <div class="small text-muted">Module: <code>ExaminationAdministration</code> &bull; GrantedBy: Admin (ID: 1)</div>
                   </td>
                   <td><input class="form-check-input" type="checkbox" checked disabled></td>
                   <td><input class="form-check-input" type="checkbox" checked></td>
@@ -78,7 +92,7 @@
                 <tr>
                   <td class="text-start">
                     <div class="fw-bold text-white">PUBLISH_RESULT</div>
-                    <div class="small text-muted">Module: EvaluationModule &bull; Allows publishing finalized results</div>
+                    <div class="small text-muted">Module: <code>EvaluationAndResult</code> &bull; GrantedBy: Admin (ID: 1)</div>
                   </td>
                   <td><input class="form-check-input" type="checkbox" checked disabled></td>
                   <td><input class="form-check-input" type="checkbox" checked></td>
@@ -87,11 +101,20 @@
                 <tr>
                   <td class="text-start">
                     <div class="fw-bold text-white">TAKE_EXAM</div>
-                    <div class="small text-muted">Module: ExecutionModule &bull; Allows attempting scheduled exams</div>
+                    <div class="small text-muted">Module: <code>ExaminationRuntime</code> &bull; GrantedBy: System</div>
                   </td>
                   <td><input class="form-check-input" type="checkbox" checked disabled></td>
                   <td><input class="form-check-input" type="checkbox"></td>
                   <td><input class="form-check-input" type="checkbox" checked></td>
+                </tr>
+                <tr>
+                  <td class="text-start">
+                    <div class="fw-bold text-white">MANAGE_USERS</div>
+                    <div class="small text-muted">Module: <code>IdentityAndAccess</code> &bull; GrantedBy: System</div>
+                  </td>
+                  <td><input class="form-check-input" type="checkbox" checked disabled></td>
+                  <td><input class="form-check-input" type="checkbox"></td>
+                  <td><input class="form-check-input" type="checkbox"></td>
                 </tr>
               </tbody>
             </table>

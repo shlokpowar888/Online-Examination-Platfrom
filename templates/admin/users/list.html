@@ -33,6 +33,12 @@
           </a>
         </div>
         <div class="nav-item">
+          <a href="/templates/admin/roles/permissions.html" class="nav-link">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>RBAC Matrix</span>
+          </a>
+        </div>
+        <div class="nav-item">
           <a href="/templates/subjects/list.html" class="nav-link">
             <i class="bi bi-book-fill"></i>
             <span>Subjects</span>
@@ -51,78 +57,105 @@
       <header class="top-navbar">
         <div class="navbar-search">
           <i class="bi bi-search"></i>
-          <input type="text" placeholder="Search users...">
+          <input type="text" placeholder="Search users by name, email, phone...">
         </div>
       </header>
 
       <main class="content-body">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/templates/admin/dashboard.html">Admin</a></li>
+            <li class="breadcrumb-item active" aria-current="page">User Management</li>
+          </ol>
+        </nav>
+
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div>
-            <h3 class="fw-bold m-0">User Management</h3>
-            <p class="text-muted small m-0">Manage system users, assigned roles, and account statuses</p>
+            <h3 class="fw-bold m-0">User Directory (User Table)</h3>
+            <p class="text-muted small m-0">Manage system users, assigned roles, security status, and account locks</p>
           </div>
-          <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addUserModal">
+          <button class="btn btn-primary-custom" onclick="showToast('Create User modal requested', 'info')">
             <i class="bi bi-person-plus-fill"></i> Add New User
           </button>
         </div>
 
         <div class="glass-card p-4">
           <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle">
+            <table class="table table-dark table-hover align-middle small">
               <thead>
-                <tr class="text-muted small">
+                <tr class="text-muted">
                   <th>ID</th>
-                  <th>Name</th>
+                  <th>Full Name</th>
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Role</th>
-                  <th>Status</th>
+                  <th>Failed Logins</th>
+                  <th>Lock Status</th>
+                  <th>Last Login</th>
+                  <th>Active</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>#1</td>
-                  <td class="fw-semibold">System Admin</td>
+                  <td class="fw-semibold text-white">System Admin</td>
                   <td>admin@platform.com</td>
                   <td>9876543210</td>
                   <td><span class="badge bg-danger">Admin</span></td>
+                  <td>0</td>
+                  <td><span class="badge bg-success"><i class="bi bi-unlock-fill"></i> OK</span></td>
+                  <td class="text-muted">Today, 03:00 PM</td>
                   <td><span class="status-badge badge-active">Active</span></td>
                   <td>
-                    <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-light me-1" title="Edit User"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-info" title="View Login History"><i class="bi bi-clock-history"></i></button>
                   </td>
                 </tr>
                 <tr>
                   <td>#2</td>
-                  <td class="fw-semibold">Dr. Rajesh Sharma</td>
+                  <td class="fw-semibold text-white">Dr. Rajesh Sharma</td>
                   <td>rajesh.sharma@college.edu</td>
                   <td>9876543211</td>
                   <td><span class="badge bg-info">Faculty</span></td>
+                  <td>0</td>
+                  <td><span class="badge bg-success"><i class="bi bi-unlock-fill"></i> OK</span></td>
+                  <td class="text-muted">Today, 02:15 PM</td>
                   <td><span class="status-badge badge-active">Active</span></td>
                   <td>
-                    <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-light me-1" title="Edit User"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-info" title="View Login History"><i class="bi bi-clock-history"></i></button>
                   </td>
                 </tr>
                 <tr>
                   <td>#3</td>
-                  <td class="fw-semibold">Rutuja Ghodekar</td>
+                  <td class="fw-semibold text-white">Rutuja Ghodekar</td>
                   <td>rutuja.student@college.edu</td>
                   <td>9876543212</td>
                   <td><span class="badge bg-success">Student</span></td>
+                  <td>0</td>
+                  <td><span class="badge bg-success"><i class="bi bi-unlock-fill"></i> OK</span></td>
+                  <td class="text-muted">Today, 02:45 PM</td>
                   <td><span class="status-badge badge-active">Active</span></td>
                   <td>
-                    <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-light me-1" title="Edit User"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-info" title="View Login History"><i class="bi bi-clock-history"></i></button>
                   </td>
                 </tr>
                 <tr>
                   <td>#4</td>
-                  <td class="fw-semibold">Shlok Powar</td>
+                  <td class="fw-semibold text-white">Shlok Powar</td>
                   <td>shlok.powar@college.edu</td>
                   <td>9876543213</td>
                   <td><span class="badge bg-success">Student</span></td>
+                  <td>0</td>
+                  <td><span class="badge bg-success"><i class="bi bi-unlock-fill"></i> OK</span></td>
+                  <td class="text-muted">Today, 02:40 PM</td>
                   <td><span class="status-badge badge-active">Active</span></td>
                   <td>
-                    <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-light me-1" title="Edit User"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-info" title="View Login History"><i class="bi bi-clock-history"></i></button>
                   </td>
                 </tr>
               </tbody>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - MMCOE Online Examination Platform</title>
+  <title>Admin Dashboard - MMCOE Online Exam Platform</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/static/css/styles.css">
@@ -11,7 +11,6 @@
 <body>
 
   <div class="app-wrapper">
-    <!-- Sidebar Component (Admin) -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <a href="/" class="sidebar-brand">
@@ -19,7 +18,6 @@
           <span>MMCOE Exam</span>
         </a>
       </div>
-      
       <div class="sidebar-nav">
         <div class="nav-section-title">Administrator Portal</div>
         <div class="nav-item">
@@ -32,6 +30,12 @@
           <a href="/templates/admin/users/list.html" class="nav-link">
             <i class="bi bi-people-fill"></i>
             <span>User Management</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/templates/admin/roles/permissions.html" class="nav-link">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>RBAC Matrix</span>
           </a>
         </div>
         <div class="nav-item">
@@ -55,140 +59,202 @@
       </div>
     </aside>
 
-    <!-- Main Content Area -->
     <div class="main-content">
-      <!-- Navbar Component -->
       <header class="top-navbar">
         <div class="navbar-search">
           <i class="bi bi-search"></i>
-          <input type="text" placeholder="Search admin settings, users...">
+          <input type="text" placeholder="Search system configuration, users, audit logs...">
         </div>
-
         <div class="navbar-actions">
           <div class="dropdown">
             <div class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <div class="avatar" style="background: linear-gradient(135deg, var(--mmcoe-maroon), var(--mmcoe-navy));">A</div>
+              <div class="avatar" style="background: var(--rose);">A</div>
               <div class="user-info">
                 <span class="user-name">System Administrator</span>
-                <span class="user-role">Admin</span>
+                <span class="user-role">Super Admin (ID: 1)</span>
               </div>
-              <i class="bi bi-chevron-down ms-1 text-muted" style="font-size: 0.75rem;"></i>
             </div>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark glass-card mt-2">
-              <li><a class="dropdown-item text-danger" href="/templates/auth/login.html"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow">
+              <li><a class="dropdown-item text-danger" href="/templates/auth/login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
             </ul>
           </div>
         </div>
       </header>
 
-      <!-- Content Body -->
       <main class="content-body">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Admin Control Center</li>
+          </ol>
+        </nav>
+
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div>
-            <h3 class="fw-bold m-0">System Control Center</h3>
-            <p class="text-muted small m-0">Platform overview, active sessions, audit logs, and performance metrics</p>
+            <h3 class="fw-bold m-0">Platform System Administration</h3>
+            <p class="text-muted small m-0">Global user control, security policies, system diagnostics, and configuration</p>
           </div>
-          <a href="/templates/admin/users/list.html" class="btn btn-primary-custom">
-            <i class="bi bi-person-plus-fill"></i> Add User
-          </a>
+          <div class="d-flex gap-2">
+            <a href="/templates/admin/users/list.html" class="btn btn-outline-info">
+              <i class="bi bi-person-plus-fill"></i> Manage Users
+            </a>
+            <a href="/templates/admin/system/metrics.html" class="btn btn-primary-custom">
+              <i class="bi bi-activity"></i> System Diagnostics
+            </a>
+          </div>
         </div>
 
-        <!-- Admin Stat Cards -->
+        <!-- Stat Cards -->
         <div class="row g-3 mb-4">
           <div class="col-md-3">
             <div class="glass-card stat-card">
-              <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+              <div class="stat-icon maroon"><i class="bi bi-people-fill"></i></div>
               <div class="stat-info">
                 <h3>4</h3>
-                <p>Total Users</p>
+                <p>Total Registered Users</p>
               </div>
             </div>
           </div>
           <div class="col-md-3">
             <div class="glass-card stat-card">
-              <div class="stat-icon emerald"><i class="bi bi-broadcast"></i></div>
+              <div class="stat-icon navy"><i class="bi bi-shield-check"></i></div>
               <div class="stat-info">
-                <h3>2</h3>
-                <p>Active Sessions</p>
+                <h3>3</h3>
+                <p>RBAC System Roles</p>
               </div>
             </div>
           </div>
           <div class="col-md-3">
             <div class="glass-card stat-card">
-              <div class="stat-icon purple"><i class="bi bi-journal-check"></i></div>
+              <div class="stat-icon emerald"><i class="bi bi-check-all"></i></div>
               <div class="stat-info">
-                <h3>2</h3>
-                <p>Subjects</p>
+                <h3>100%</h3>
+                <p>System Uptime</p>
               </div>
             </div>
           </div>
           <div class="col-md-3">
             <div class="glass-card stat-card">
-              <div class="stat-icon amber"><i class="bi bi-speedometer2"></i></div>
+              <div class="stat-icon amber"><i class="bi bi-lightning-charge-fill"></i></div>
               <div class="stat-info">
                 <h3>12.45 ms</h3>
-                <p>DB Latency</p>
+                <p>Avg Query Latency</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- System Health & Audit Preview Row -->
-        <div class="row g-4 mb-4">
-          <div class="col-lg-6">
-            <div class="glass-card p-4 h-100">
-              <h5 class="fw-bold mb-3"><i class="bi bi-activity text-info me-2"></i>Active Sessions (UserSession)</h5>
+        <div class="row g-4">
+          <!-- Recent Audit Logs -->
+          <div class="col-lg-7">
+            <div class="glass-card p-4 mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold m-0"><i class="bi bi-journal-text text-info me-2"></i>Security & Audit Trail (AuditLog Table)</h5>
+                <span class="badge bg-success">IMMUTABLE</span>
+              </div>
+
               <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle small">
+                <table class="table table-dark table-hover align-middle small m-0">
                   <thead>
                     <tr class="text-muted">
+                      <th>Timestamp</th>
                       <th>User</th>
-                      <th>IP Address</th>
-                      <th>Device</th>
+                      <th>Entity</th>
+                      <th>Action</th>
                       <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Rutuja Ghodekar (Student)</td>
-                      <td>192.168.1.15</td>
-                      <td>Desktop</td>
-                      <td><span class="badge bg-success">ACTIVE</span></td>
+                      <td class="text-muted">Today, 02:45 PM</td>
+                      <td class="fw-semibold">Dr. Rajesh Sharma</td>
+                      <td>Evaluation</td>
+                      <td><span class="badge bg-primary">UPDATE</span></td>
+                      <td><span class="text-emerald fw-bold">SUCCESS</span></td>
                     </tr>
                     <tr>
-                      <td>Shlok Powar (Student)</td>
-                      <td>192.168.1.18</td>
-                      <td>Mobile</td>
-                      <td><span class="badge bg-success">ACTIVE</span></td>
+                      <td class="text-muted">Today, 02:35 PM</td>
+                      <td class="fw-semibold">Shlok Powar</td>
+                      <td>ExamAttempt</td>
+                      <td><span class="badge bg-info">CREATE</span></td>
+                      <td><span class="text-emerald fw-bold">SUCCESS</span></td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">Today, 02:30 PM</td>
+                      <td class="fw-semibold">Rutuja Ghodekar</td>
+                      <td>ExamAttempt</td>
+                      <td><span class="badge bg-info">CREATE</span></td>
+                      <td><span class="text-emerald fw-bold">SUCCESS</span></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
+
+            <!-- Quick Action Palette -->
+            <div class="glass-card p-4">
+              <h5 class="fw-bold mb-3"><i class="bi bi-grid text-warning me-2"></i>Quick Administrative Actions</h5>
+              <div class="row g-2">
+                <div class="col-md-4">
+                  <a href="/templates/admin/users/list.html" class="btn btn-outline-light w-100 py-3 text-center">
+                    <i class="bi bi-person-gear fs-4 d-block mb-1 text-info"></i>
+                    <span class="small fw-bold">User Control</span>
+                  </a>
+                </div>
+                <div class="col-md-4">
+                  <a href="/templates/admin/roles/permissions.html" class="btn btn-outline-light w-100 py-3 text-center">
+                    <i class="bi bi-shield-lock fs-4 d-block mb-1 text-warning"></i>
+                    <span class="small fw-bold">RBAC Matrix</span>
+                  </a>
+                </div>
+                <div class="col-md-4">
+                  <a href="/templates/admin/system/metrics.html" class="btn btn-outline-light w-100 py-3 text-center">
+                    <i class="bi bi-cpu fs-4 d-block mb-1 text-success"></i>
+                    <span class="small fw-bold">Metrics & Flags</span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="col-lg-6">
+          <!-- System Health & Metrics -->
+          <div class="col-lg-5">
             <div class="glass-card p-4 h-100">
-              <h5 class="fw-bold mb-3"><i class="bi bi-shield-check text-warning me-2"></i>System Audit Log (AuditLog)</h5>
-              <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle small">
-                  <thead>
-                    <tr class="text-muted">
-                      <th>Entity</th>
-                      <th>Action</th>
-                      <th>IP Address</th>
-                      <th>Timestamp</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Result #1</td>
-                      <td><span class="badge bg-primary">CREATE</span></td>
-                      <td>192.168.1.10</td>
-                      <td class="text-muted">Just now</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <h5 class="fw-bold mb-3"><i class="bi bi-speedometer2 text-emerald me-2"></i>Live System Health (PerformanceMetric)</h5>
+
+              <div class="p-3 bg-dark rounded border border-secondary mb-3">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span class="text-muted">Database Engine Query Latency</span>
+                  <span class="text-emerald fw-bold">12.45 ms (Normal)</span>
+                </div>
+                <div class="progress bg-secondary mb-3" style="height: 8px;">
+                  <div class="progress-bar bg-success" style="width: 25%;"></div>
+                </div>
+
+                <div class="d-flex justify-content-between small mb-1">
+                  <span class="text-muted">Flask Worker Thread Pool Usage</span>
+                  <span class="text-info fw-bold">18% Capacity</span>
+                </div>
+                <div class="progress bg-secondary mb-3" style="height: 8px;">
+                  <div class="progress-bar bg-info" style="width: 18%;"></div>
+                </div>
+
+                <div class="d-flex justify-content-between small mb-1">
+                  <span class="text-muted">Active User Sessions (UserSession)</span>
+                  <span class="text-warning fw-bold">4 Active</span>
+                </div>
+                <div class="progress bg-secondary" style="height: 8px;">
+                  <div class="progress-bar bg-warning" style="width: 40%;"></div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-dark rounded border border-secondary">
+                <h6 class="fw-bold text-white small mb-2"><i class="bi bi-flag-fill text-warning me-1"></i>Active Feature Flags</h6>
+                <div class="d-flex justify-content-between align-items-center small">
+                  <span>AUTO_EVALUATION_MSQ</span>
+                  <span class="badge bg-success">100% ROLLOUT</span>
+                </div>
               </div>
             </div>
           </div>

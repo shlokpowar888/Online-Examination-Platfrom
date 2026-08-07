@@ -44,10 +44,17 @@
       </header>
 
       <main class="content-body">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/templates/exams/list.html">Exam Management</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create Exam</li>
+          </ol>
+        </nav>
+
         <div class="mb-4">
-          <a href="/templates/exams/list.html" class="text-muted small">&larr; Back to Exam Management</a>
-          <h3 class="fw-bold m-0 mt-1">Design & Schedule Examination</h3>
-          <p class="text-muted small m-0">Configure exam parameters, scoring policies, schedules, and question paper blueprint</p>
+          <h3 class="fw-bold m-0">Design & Schedule Examination</h3>
+          <p class="text-muted small m-0">Configure exam master definition (Exam) and schedule parameters (ExamSchedule)</p>
         </div>
 
         <div class="glass-card p-4 p-md-5" style="max-width: 900px;">
@@ -63,7 +70,9 @@
             </li>
           </ul>
 
-          <form action="/templates/exams/list.html" method="GET">
+          <form action="/templates/exams/list.html" method="GET" onsubmit="showToast('Exam configured and scheduled successfully!', 'success')">
+            
+            <!-- Step 1 -->
             <div id="step-1">
               <h5 class="fw-bold mb-3 text-info"><i class="bi bi-info-circle me-2"></i>Step 1: General Examination Information</h5>
               
@@ -87,17 +96,29 @@
               </div>
 
               <div class="row g-3 mb-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label class="form-label small fw-semibold">Assessment Type</label>
                   <select class="form-select form-control-custom">
                     <option value="OBJECTIVE">OBJECTIVE (MCQ / MSQ)</option>
                     <option value="SUBJECTIVE">SUBJECTIVE (Descriptive)</option>
                   </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label class="form-label small fw-semibold">Duration (Minutes)</label>
                   <input type="number" class="form-control form-control-custom" value="60" min="5" required>
                 </div>
+                <div class="col-md-4">
+                  <label class="form-label small fw-semibold">Initial Status (examStatus)</label>
+                  <select class="form-select form-control-custom">
+                    <option value="DRAFT">DRAFT</option>
+                    <option value="SCHEDULED" selected>SCHEDULED</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-semibold">Examination Instructions (instructions)</label>
+                <textarea class="form-control form-control-custom" rows="3" placeholder="Enter student instructions...">1. Do not refresh or exit full-screen mode during the exam. 2. Auto-submit will trigger upon countdown expiry.</textarea>
               </div>
 
               <div class="text-end">
@@ -105,22 +126,27 @@
               </div>
             </div>
 
+            <!-- Step 2 -->
             <div id="step-2" class="d-none">
-              <h5 class="fw-bold mb-3 text-info"><i class="bi bi-sliders me-2"></i>Step 2: Scoring, Attempts & Shuffling Rules</h5>
+              <h5 class="fw-bold mb-3 text-info"><i class="bi bi-sliders me-2"></i>Step 2: Scoring, Negative Marking & Shuffling</h5>
               
               <div class="row g-3 mb-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label class="form-label small fw-semibold">Total Marks</label>
                   <input type="number" class="form-control form-control-custom" value="100.00" step="0.5" required>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label class="form-label small fw-semibold">Passing Marks</label>
                   <input type="number" class="form-control form-control-custom" value="40.00" step="0.5" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small fw-semibold">Maximum Attempts</label>
+                  <input type="number" class="form-control form-control-custom" value="1" min="1" required>
                 </div>
               </div>
 
               <div class="p-3 bg-dark rounded border border-secondary mb-4">
-                <h6 class="fw-bold text-white small mb-3">Randomization & Integrity Settings</h6>
+                <h6 class="fw-bold text-white small mb-3">Integrity & Negative Marking Rules</h6>
                 <div class="form-check form-switch mb-2">
                   <input class="form-check-input" type="checkbox" id="shuffleQ" checked>
                   <label class="form-check-label small text-muted" for="shuffleQ">Shuffle Question Order for Each Student</label>
@@ -128,6 +154,14 @@
                 <div class="form-check form-switch mb-2">
                   <input class="form-check-input" type="checkbox" id="shuffleOpt" checked>
                   <label class="form-check-label small text-muted" for="shuffleOpt">Shuffle Option Choice Order (A/B/C/D)</label>
+                </div>
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="negMarkingToggle">
+                  <label class="form-check-label small text-muted" for="negMarkingToggle">Enable Negative Marking (negativeMarking)</label>
+                </div>
+                <div class="mt-2" style="max-width: 250px;">
+                  <label class="form-label small text-muted">Negative Marks Per Wrong Question</label>
+                  <input type="number" class="form-control form-control-custom" value="0.25" step="0.25">
                 </div>
               </div>
 
@@ -137,17 +171,42 @@
               </div>
             </div>
 
+            <!-- Step 3 -->
             <div id="step-3" class="d-none">
-              <h5 class="fw-bold mb-3 text-info"><i class="bi bi-calendar-check me-2"></i>Step 3: Examination Schedule & Auto-Submit Rules</h5>
+              <h5 class="fw-bold mb-3 text-info"><i class="bi bi-calendar-check me-2"></i>Step 3: ExamSchedule Parameters</h5>
 
               <div class="row g-3 mb-3">
                 <div class="col-md-6">
-                  <label class="form-label small fw-semibold">Exam Start Time</label>
+                  <label class="form-label small fw-semibold">Exam Start Time (startTime)</label>
                   <input type="datetime-local" class="form-control form-control-custom" required>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label small fw-semibold">Exam End Time</label>
+                  <label class="form-label small fw-semibold">Exam End Time (endTime)</label>
                   <input type="datetime-local" class="form-control form-control-custom" required>
+                </div>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Registration Start</label>
+                  <input type="datetime-local" class="form-control form-control-custom">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Registration End</label>
+                  <input type="datetime-local" class="form-control form-control-custom">
+                </div>
+              </div>
+
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold">Late Entry Allowance (Minutes)</label>
+                  <input type="number" class="form-control form-control-custom" value="10" min="0">
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                  <div class="form-check form-switch mt-4">
+                    <input class="form-check-input" type="checkbox" id="autoSubmitCheck" checked>
+                    <label class="form-check-label small text-muted" for="autoSubmitCheck">Auto-Submit Answers Upon Timer Expiry</label>
+                  </div>
                 </div>
               </div>
 
