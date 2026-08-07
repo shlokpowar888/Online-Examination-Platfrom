@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - Online Examination Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold m-0">Welcome back, Rutuja! 👋</h3>
+    <p class="text-muted small m-0">Here is your examination overview and schedule</p>
+  </div>
+  <a href="/student/exams/available.html" class="btn btn-primary-custom">
+    <i class="bi bi-plus-lg"></i> Register for Exam
+  </a>
+</div>
+
+<!-- Stat Cards Row -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon blue"><i class="bi bi-journal-text"></i></div>
+      <div class="stat-info">
+        <h3>2</h3>
+        <p>Registered Exams</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon emerald"><i class="bi bi-check-circle"></i></div>
+      <div class="stat-info">
+        <h3>5</h3>
+        <p>Exams Passed</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon purple"><i class="bi bi-trophy"></i></div>
+      <div class="stat-info">
+        <h3>92.5%</h3>
+        <p>Average Score</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card stat-card">
+      <div class="stat-icon amber"><i class="bi bi-clock-history"></i></div>
+      <div class="stat-info">
+        <h3>1</h3>
+        <p>Active Today</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Active/Ongoing Exam Alert Card -->
+<div class="glass-card p-4 mb-4 border-start border-4 border-emerald" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(22, 28, 45, 0.7));">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div>
+      <span class="status-badge badge-active mb-2">NOW ONGOING</span>
+      <h4 class="fw-bold mb-1">EXAM-DBMS-MID: DBMS Mid-Term Assessment</h4>
+      <p class="text-muted small mb-0"><i class="bi bi-clock me-1"></i> Duration: 60 Minutes &bull; Total Marks: 100</p>
+    </div>
+    <a href="/exam_runtime/lobby.html" class="btn btn-success px-4 py-2 fw-semibold">
+      <i class="bi bi-play-circle-fill me-1"></i> Start Exam Now
+    </a>
+  </div>
+</div>
+
+<!-- Registered & Upcoming Exams Table -->
+<div class="glass-card p-4 mb-4">
+  <h5 class="fw-bold mb-3"><i class="bi bi-calendar-event text-info me-2"></i>My Registered Exams</h5>
+  
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle">
+      <thead>
+        <tr class="text-muted small">
+          <th>Exam Code</th>
+          <th>Exam Title</th>
+          <th>Subject</th>
+          <th>Duration</th>
+          <th>Schedule Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="font-monospace">EXAM-DBMS-MID</span></td>
+          <td class="fw-semibold">DBMS Mid-Term Assessment</td>
+          <td>CS101 - Database Systems</td>
+          <td>60 mins</td>
+          <td><span class="status-badge badge-active">ONGOING</span></td>
+          <td>
+            <a href="/exam_runtime/lobby.html" class="btn btn-sm btn-outline-success">Enter Lobby</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="font-monospace">EXAM-FSWD-FINAL</span></td>
+          <td class="fw-semibold">Full Stack Web Dev Assessment</td>
+          <td>CS102 - Web Development</td>
+          <td>90 mins</td>
+          <td><span class="status-badge badge-scheduled">SCHEDULED</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-secondary" disabled>Starts Tomorrow</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Recent Result Summaries -->
+<div class="glass-card p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold m-0"><i class="bi bi-trophy text-warning me-2"></i>Recent Results</h5>
+    <a href="/student/results/list.html" class="small text-info">View All Results &rarr;</a>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="p-3 rounded bg-dark border border-secondary d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="fw-bold m-0">Data Structures Quiz 1</h6>
+          <small class="text-muted">CS100 &bull; Grade: A+</small>
+        </div>
+        <div class="text-end">
+          <span class="h5 fw-bold text-emerald m-0">100.00%</span>
+          <br><span class="badge bg-success small">PASSED</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="p-3 rounded bg-dark border border-secondary d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="fw-bold m-0">Operating Systems Unit Test</h6>
+          <small class="text-muted">CS103 &bull; Grade: A</small>
+        </div>
+        <div class="text-end">
+          <span class="h5 fw-bold text-emerald m-0">85.00%</span>
+          <br><span class="badge bg-success small">PASSED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

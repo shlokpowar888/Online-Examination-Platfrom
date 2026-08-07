@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}System Health & Metrics - Online Exam Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold m-0">System Performance Metrics</h3>
+    <p class="text-muted small m-0">Real-time database latencies, concurrency metrics, system events, and configuration flags</p>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-speedometer text-info me-2"></i>Performance Metrics (PerformanceMetric)</h5>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle small">
+          <thead>
+            <tr class="text-muted">
+              <th>Metric Name</th>
+              <th>Value</th>
+              <th>Unit</th>
+              <th>Module</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="fw-semibold">DB_QUERY_LATENCY</td>
+              <td><span class="text-emerald font-monospace">12.4500</span></td>
+              <td>MS</td>
+              <td>DatabaseEngine</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-flag-fill text-warning me-2"></i>Feature Flags (FeatureFlag)</h5>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle small">
+          <thead>
+            <tr class="text-muted">
+              <th>Flag Name</th>
+              <th>Status</th>
+              <th>Rollout</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="fw-semibold">AUTO_EVALUATION_MSQ</td>
+              <td><span class="badge bg-success">ENABLED</span></td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

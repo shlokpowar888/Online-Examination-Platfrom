@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Question - Question Bank{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <a href="/questions/list.html" class="text-muted small">&larr; Back to Question Bank</a>
+  <h3 class="fw-bold m-0 mt-1">Create Question</h3>
+  <p class="text-muted small m-0">Add a new question definition to the centralized repository</p>
+</div>
+
+<div class="glass-card p-4" style="max-width: 800px;">
+  <form action="/questions/list.html" method="GET">
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-semibold">Category</label>
+        <select class="form-select form-control-custom">
+          <option value="1">SQL Queries</option>
+          <option value="2">Database Concepts</option>
+        </select>
+      </div>
+      
+      <div class="col-md-6">
+        <label class="form-label small fw-semibold">Difficulty Level</label>
+        <select class="form-select form-control-custom">
+          <option value="1">Easy (Score: 1)</option>
+          <option value="2">Medium (Score: 5)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-semibold">Question Type</label>
+        <select class="form-select form-control-custom" id="qTypeSelect">
+          <option value="MCQ">MCQ (Single Choice)</option>
+          <option value="MSQ">MSQ (Multiple Choice)</option>
+          <option value="TRUE_FALSE">True / False</option>
+          <option value="DESCRIPTIVE">Descriptive Essay</option>
+          <option value="CODING">Coding Assessment</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label small fw-semibold">Default Marks</label>
+        <input type="number" class="form-control form-control-custom" value="50.00" step="0.5">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label small fw-semibold">Question Text</label>
+      <textarea class="form-control form-control-custom" rows="3" placeholder="Enter question statement..." required></textarea>
+    </div>
+
+    <!-- Options Section -->
+    <div class="mb-4">
+      <label class="form-label small fw-semibold">Question Options (QuestionOption Table)</label>
+      
+      <div class="d-flex flex-column gap-2 mb-2">
+        <div class="input-group">
+          <span class="input-group-text bg-dark border-secondary text-white">A</span>
+          <input type="text" class="form-control form-control-custom" placeholder="Option A text" value="WHERE">
+          <div class="input-group-text bg-dark border-secondary text-white">
+            <input class="form-check-input mt-0" type="radio" name="correctOpt" checked> Correct
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <span class="input-group-text bg-dark border-secondary text-white">B</span>
+          <input type="text" class="form-control form-control-custom" placeholder="Option B text" value="GROUP BY">
+          <div class="input-group-text bg-dark border-secondary text-white">
+            <input class="form-check-input mt-0" type="radio" name="correctOpt"> Correct
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label small fw-semibold">Explanation / Solution Notes</label>
+      <textarea class="form-control form-control-custom" rows="2" placeholder="Optional explanation for correct answer..."></textarea>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary-custom px-4">Save Question</button>
+      <a href="/questions/list.html" class="btn btn-outline-secondary px-4">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

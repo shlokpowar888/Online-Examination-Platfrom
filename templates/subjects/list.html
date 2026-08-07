@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Subject Management - Online Exam Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold m-0">Academic Subjects</h3>
+    <p class="text-muted small m-0">Manage course subjects, subject codes, and academic credit allocations</p>
+  </div>
+  <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+    <i class="bi bi-plus-lg"></i> Add Subject
+  </button>
+</div>
+
+<div class="glass-card p-4">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle">
+      <thead>
+        <tr class="text-muted small">
+          <th>ID</th>
+          <th>Subject Code</th>
+          <th>Subject Name</th>
+          <th>Credits</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#1</td>
+          <td><span class="font-monospace">CS101</span></td>
+          <td class="fw-semibold">Database Management Systems</td>
+          <td>4</td>
+          <td><span class="status-badge badge-active">Active</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>#2</td>
+          <td><span class="font-monospace">CS102</span></td>
+          <td class="fw-semibold">Full Stack Web Development</td>
+          <td>4</td>
+          <td><span class="status-badge badge-active">Active</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal: Add Subject -->
+<div class="modal fade" id="addSubjectModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content glass-card p-2">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title fw-bold">Add Academic Subject</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label small">Subject Code</label>
+            <input type="text" class="form-control form-control-custom" placeholder="CS103" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small">Subject Name</label>
+            <input type="text" class="form-control form-control-custom" placeholder="Operating Systems" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small">Credits</label>
+            <input type="number" class="form-control form-control-custom" value="4" required>
+          </div>
+          <button type="submit" class="btn btn-primary-custom w-100 mt-2">Save Subject</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
