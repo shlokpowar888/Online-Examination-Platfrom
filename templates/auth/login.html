@@ -83,15 +83,6 @@
       </div>
     </div>
 
-    <!-- Student Select Picker (Rutuja vs Shlok) -->
-    <div id="studentPickerContainer" class="mb-3">
-      <label class="form-label small text-muted fw-semibold">Select Student Profile</label>
-      <select class="form-select form-control-custom" id="studentSelect" onchange="updateStudentCredentials()">
-        <option value="rutuja">Rutuja Ghodekar (rutuja.student@college.edu)</option>
-        <option value="shlok">Shlok Powar (shlok.powar@college.edu)</option>
-      </select>
-    </div>
-
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="mb-3">
         <label for="email" class="form-label small fw-semibold text-dark">Email Address</label>
@@ -146,31 +137,17 @@
       document.getElementById('btn-admin').classList.remove('active');
       document.getElementById(`btn-${role}`).classList.add('active');
 
-      const studentPicker = document.getElementById('studentPickerContainer');
       const emailInput = document.getElementById('email');
 
       if (role === 'student') {
-        studentPicker.classList.remove('d-none');
-        updateStudentCredentials();
+        emailInput.value = 'rutuja.student@college.edu';
         targetUrl = '/student/dashboard.html';
       } else if (role === 'faculty') {
-        studentPicker.classList.add('d-none');
         emailInput.value = 'rajesh.sharma@college.edu';
         targetUrl = '/faculty/dashboard.html';
       } else if (role === 'admin') {
-        studentPicker.classList.add('d-none');
         emailInput.value = 'admin@platform.com';
         targetUrl = '/admin/dashboard.html';
-      }
-    }
-
-    function updateStudentCredentials() {
-      const studentVal = document.getElementById('studentSelect').value;
-      const emailInput = document.getElementById('email');
-      if (studentVal === 'shlok') {
-        emailInput.value = 'shlok.powar@college.edu';
-      } else {
-        emailInput.value = 'rutuja.student@college.edu';
       }
     }
 
