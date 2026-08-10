@@ -8,8 +8,11 @@ let timerInterval = null;
 function startExamTimer(durationMinutes, displayElementId, onExpireCallback) {
   totalSeconds = durationMinutes * 60;
   const displayElement = document.getElementById(displayElementId);
+  const timerBox = document.getElementById('timerBox');
 
   updateTimerDisplay(displayElement);
+
+  if (timerInterval) clearInterval(timerInterval);
 
   timerInterval = setInterval(() => {
     totalSeconds--;
@@ -17,7 +20,17 @@ function startExamTimer(durationMinutes, displayElementId, onExpireCallback) {
     updateTimerDisplay(displayElement);
 
     if (totalSeconds <= 300 && totalSeconds > 0) { // 5 minutes warning
-      displayElement.classList.add('bg-danger', 'text-white');
+      if (timerBox) {
+        timerBox.classList.add('bg-danger');
+      } else if (displayElement) {
+        displayElement.classList.add('text-danger', 'fw-bold');
+      }
+    } else if (totalSeconds > 300) {
+      if (timerBox) {
+        timerBox.classList.remove('bg-danger');
+      } else if (displayElement) {
+        displayElement.classList.remove('text-danger', 'fw-bold');
+      }
     }
 
     if (totalSeconds <= 0) {

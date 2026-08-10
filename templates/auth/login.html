@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="/static/css/styles.css">
   <style>
     body {
-      background: radial-gradient(circle at top right, rgba(139, 21, 43, 0.25), transparent 45%),
-                  radial-gradient(circle at bottom left, rgba(27, 54, 93, 0.3), transparent 45%),
-                  var(--bg-dark);
+      background: radial-gradient(circle at top right, rgba(139, 21, 43, 0.08), transparent 45%),
+                  radial-gradient(circle at bottom left, rgba(27, 54, 93, 0.08), transparent 45%),
+                  var(--bg-page);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -47,7 +47,7 @@
     .role-nav-btn.active {
       background: var(--mmcoe-maroon-light);
       border-color: var(--mmcoe-maroon);
-      color: var(--text-main);
+      color: var(--mmcoe-maroon);
     }
   </style>
 </head>
@@ -55,10 +55,10 @@
 
   <div class="glass-card auth-card">
     <div class="text-center mb-4">
-      <div class="d-inline-flex align-items-center justify-content-center bg-dark p-3 rounded-circle border border-secondary mb-3">
+      <div class="d-inline-flex align-items-center justify-content-center bg-light p-3 rounded-circle border mb-3">
         <i class="bi bi-mortarboard-fill text-danger fs-2"></i>
       </div>
-      <h3 class="fw-bold mb-1">MMCOE ExamPortal</h3>
+      <h3 class="fw-bold mb-1 text-dark">MMCOE ExamPortal</h3>
       <p class="text-muted small">Marathwada Mitra Mandal's College of Engineering</p>
     </div>
 
@@ -94,20 +94,20 @@
 
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="mb-3">
-        <label for="email" class="form-label small fw-semibold">Email Address</label>
+        <label for="email" class="form-label small fw-semibold text-dark">Email Address</label>
         <div class="input-group">
-          <span class="input-group-text bg-dark border-secondary text-muted"><i class="bi bi-envelope"></i></span>
+          <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
           <input type="email" class="form-control form-control-custom" id="email" value="rutuja.student@college.edu" required>
         </div>
       </div>
 
       <div class="mb-3">
         <div class="d-flex justify-content-between align-items-center mb-1">
-          <label for="password" class="form-label small fw-semibold m-0">Password</label>
-          <a href="/templates/auth/forgot_password.html" class="text-info small text-decoration-none">Forgot Password?</a>
+          <label for="password" class="form-label small fw-semibold m-0 text-dark">Password</label>
+          <a href="/auth/forgot_password.html" class="text-info small text-decoration-none">Forgot Password?</a>
         </div>
         <div class="input-group">
-          <span class="input-group-text bg-dark border-secondary text-muted"><i class="bi bi-lock"></i></span>
+          <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
           <input type="password" class="form-control form-control-custom" id="password" value="password123" required>
           <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password', 'passIcon')">
             <i class="bi bi-eye" id="passIcon"></i>
@@ -122,14 +122,14 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary-custom w-100 py-2.5 justify-content-center fs-6">
+      <button type="submit" class="btn btn-primary-custom w-100 py-2 justify-content-center fs-6">
         <i class="bi bi-box-arrow-in-right"></i> Sign In to Portal
       </button>
     </form>
 
-    <div class="text-center mt-4 border-top border-secondary pt-3">
+    <div class="text-center mt-4 border-top pt-3">
       <span class="text-muted small">New student?</span>
-      <a href="/templates/auth/register.html" class="text-info small fw-semibold text-decoration-none ms-1">Register Account</a>
+      <a href="/auth/register.html" class="text-info small fw-semibold text-decoration-none ms-1">Register Account</a>
     </div>
   </div>
 
@@ -137,7 +137,7 @@
   <script src="/static/js/app.js"></script>
   <script>
     let currentRole = 'student';
-    let targetUrl = '/templates/student/dashboard.html';
+    let targetUrl = '/student/dashboard.html';
 
     function setRole(role) {
       currentRole = role;
@@ -152,15 +152,15 @@
       if (role === 'student') {
         studentPicker.classList.remove('d-none');
         updateStudentCredentials();
-        targetUrl = '/templates/student/dashboard.html';
+        targetUrl = '/student/dashboard.html';
       } else if (role === 'faculty') {
         studentPicker.classList.add('d-none');
         emailInput.value = 'rajesh.sharma@college.edu';
-        targetUrl = '/templates/faculty/dashboard.html';
+        targetUrl = '/faculty/dashboard.html';
       } else if (role === 'admin') {
         studentPicker.classList.add('d-none');
         emailInput.value = 'admin@platform.com';
-        targetUrl = '/templates/admin/dashboard.html';
+        targetUrl = '/admin/dashboard.html';
       }
     }
 

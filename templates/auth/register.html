@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="/static/css/styles.css">
   <style>
     body {
-      background: radial-gradient(circle at top right, rgba(139, 21, 43, 0.25), transparent 45%),
-                  radial-gradient(circle at bottom left, rgba(27, 54, 93, 0.3), transparent 45%),
-                  var(--bg-dark);
+      background: radial-gradient(circle at top right, rgba(139, 21, 43, 0.08), transparent 45%),
+                  radial-gradient(circle at bottom left, rgba(27, 54, 93, 0.08), transparent 45%),
+                  var(--bg-page);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -30,45 +30,45 @@
 
   <div class="glass-card auth-card">
     <div class="text-center mb-4">
-      <div class="d-inline-flex align-items-center justify-content-center bg-dark p-3 rounded-circle border border-secondary mb-3">
+      <div class="d-inline-flex align-items-center justify-content-center bg-light p-3 rounded-circle border mb-3">
         <i class="bi bi-person-plus-fill text-danger fs-2"></i>
       </div>
-      <h3 class="fw-bold mb-1">Student Registration</h3>
+      <h3 class="fw-bold mb-1 text-dark">Student Registration</h3>
       <p class="text-muted small">Create your student account to access MMCOE examinations</p>
     </div>
 
-    <form action="/templates/auth/login.html" method="GET" onsubmit="showToast('Registration successful! Redirecting to login...', 'success')">
+    <form action="/auth/login.html" method="GET" onsubmit="showToast('Registration successful! Redirecting to login...', 'success')">
       <div class="row g-3 mb-3">
         <div class="col-md-6">
-          <label for="firstName" class="form-label small fw-semibold">First Name</label>
+          <label for="firstName" class="form-label small fw-semibold text-dark">First Name</label>
           <input type="text" class="form-control form-control-custom" id="firstName" placeholder="e.g. Rutuja / Shlok" required>
         </div>
         <div class="col-md-6">
-          <label for="lastName" class="form-label small fw-semibold">Last Name</label>
+          <label for="lastName" class="form-label small fw-semibold text-dark">Last Name</label>
           <input type="text" class="form-control form-control-custom" id="lastName" placeholder="e.g. Ghodekar / Powar" required>
         </div>
       </div>
 
       <div class="mb-3">
-        <label for="email" class="form-label small fw-semibold">College Email Address</label>
+        <label for="email" class="form-label small fw-semibold text-dark">College Email Address</label>
         <div class="input-group">
-          <span class="input-group-text bg-dark border-secondary text-muted"><i class="bi bi-envelope"></i></span>
+          <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
           <input type="email" class="form-control form-control-custom" id="email" placeholder="student@college.edu" required>
         </div>
       </div>
 
       <div class="mb-3">
-        <label for="phone" class="form-label small fw-semibold">Phone Number (User Table Spec)</label>
+        <label for="phone" class="form-label small fw-semibold text-dark">Phone Number (User Table Spec)</label>
         <div class="input-group">
-          <span class="input-group-text bg-dark border-secondary text-muted"><i class="bi bi-telephone"></i></span>
+          <span class="input-group-text bg-light text-muted"><i class="bi bi-telephone"></i></span>
           <input type="tel" class="form-control form-control-custom" id="phone" placeholder="9876543210" pattern="[0-9]{10}" required>
         </div>
       </div>
 
       <div class="mb-3">
-        <label for="password" class="form-label small fw-semibold">Password</label>
+        <label for="password" class="form-label small fw-semibold text-dark">Password</label>
         <div class="input-group">
-          <span class="input-group-text bg-dark border-secondary text-muted"><i class="bi bi-lock"></i></span>
+          <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
           <input type="password" class="form-control form-control-custom" id="password" placeholder="Minimum 8 characters" required>
           <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password', 'passIcon')">
             <i class="bi bi-eye" id="passIcon"></i>
@@ -83,14 +83,14 @@
         </label>
       </div>
 
-      <button type="submit" class="btn btn-primary-custom w-100 py-2.5 justify-content-center fs-6">
+      <button type="submit" class="btn btn-primary-custom w-100 py-2 justify-content-center fs-6">
         <i class="bi bi-check-circle-fill"></i> Complete Registration
       </button>
     </form>
 
-    <div class="text-center mt-4 border-top border-secondary pt-3">
+    <div class="text-center mt-4 border-top pt-3">
       <span class="text-muted small">Already have an account?</span>
-      <a href="/templates/auth/login.html" class="text-info small fw-semibold text-decoration-none ms-1">Sign In Here</a>
+      <a href="/auth/login.html" class="text-info small fw-semibold text-decoration-none ms-1">Sign In Here</a>
     </div>
   </div>
 

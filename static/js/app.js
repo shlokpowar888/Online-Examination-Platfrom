@@ -12,7 +12,7 @@ function showToast(message, type = 'info') {
 
   const toastId = 'toast-' + Date.now();
   const html = `
-    <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0 show shadow-sm" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="d-flex">
         <div class="toast-body">
           <i class="bi bi-info-circle-fill me-2"></i> ${message}
@@ -79,9 +79,9 @@ function addQuestionOption() {
   div.className = 'input-group mb-2 option-row';
   div.id = `option-row-${currentCount}`;
   div.innerHTML = `
-    <span class="input-group-text bg-dark border-secondary text-white font-monospace">${optionLetter}</span>
+    <span class="input-group-text bg-light text-dark font-monospace">${optionLetter}</span>
     <input type="text" class="form-control form-control-custom" placeholder="Option ${optionLetter} text" required>
-    <div class="input-group-text bg-dark border-secondary text-white">
+    <div class="input-group-text bg-light text-dark">
       <input class="form-check-input mt-0" type="checkbox" title="Mark as correct answer">
       <span class="ms-1 small">Correct</span>
     </div>
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const navbar = document.querySelector('.top-navbar');
   if (navbar && !navbar.querySelector('.mobile-toggle-btn')) {
     const btn = document.createElement('button');
-    btn.className = 'btn btn-sm btn-outline-light d-lg-none me-2 mobile-toggle-btn';
+    btn.className = 'btn btn-sm btn-outline-secondary d-lg-none me-2 mobile-toggle-btn';
     btn.innerHTML = '<i class="bi bi-list fs-5"></i>';
     btn.onclick = toggleMobileSidebar;
     navbar.insertBefore(btn, navbar.firstChild);

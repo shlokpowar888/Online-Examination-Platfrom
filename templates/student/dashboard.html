@@ -21,25 +21,25 @@
       <div class="sidebar-nav">
         <div class="nav-section-title">Student Portal</div>
         <div class="nav-item">
-          <a href="/templates/student/dashboard.html" class="nav-link active">
+          <a href="/student/dashboard.html" class="nav-link active">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Dashboard</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/student/exams/available.html" class="nav-link">
+          <a href="/student/exams/available.html" class="nav-link">
             <i class="bi bi-journal-check"></i>
             <span>Available Exams</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/student/results/list.html" class="nav-link">
+          <a href="/student/results/list.html" class="nav-link">
             <i class="bi bi-trophy-fill"></i>
             <span>My Results</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/notifications/center.html" class="nav-link">
+          <a href="/notifications/center.html" class="nav-link">
             <i class="bi bi-bell-fill"></i>
             <span>Notifications</span>
           </a>
@@ -62,12 +62,12 @@
                 <span class="user-role">Student (ID: 3)</span>
               </div>
             </div>
-            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow">
+            <ul class="dropdown-menu dropdown-menu-end shadow">
               <li><span class="dropdown-item-text text-muted small">Switch Demo Student:</span></li>
               <li><a class="dropdown-item" href="#" onclick="showToast('Active User: Rutuja Ghodekar', 'info')"><i class="bi bi-person me-2"></i> Rutuja Ghodekar</a></li>
               <li><a class="dropdown-item" href="#" onclick="showToast('Active User: Shlok Powar', 'info')"><i class="bi bi-person me-2"></i> Shlok Powar</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="/templates/auth/login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+              <li><a class="dropdown-item text-danger" href="/auth/login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
             </ul>
           </div>
         </div>
@@ -84,10 +84,10 @@
 
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div>
-            <h3 class="fw-bold m-0">Welcome back, Student!</h3>
+            <h3 class="fw-bold m-0 text-dark">Welcome back, Student!</h3>
             <p class="text-muted small m-0">Marathwada Mitra Mandal's College of Engineering &bull; Spring 2026 Semester</p>
           </div>
-          <a href="/templates/student/exams/available.html" class="btn btn-primary-custom">
+          <a href="/student/exams/available.html" class="btn btn-primary-custom">
             <i class="bi bi-play-circle-fill"></i> View Open Exams
           </a>
         </div>
@@ -137,31 +137,31 @@
           <div class="col-lg-7">
             <div class="glass-card p-4 mb-4">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold m-0"><i class="bi bi-calendar-event text-info me-2"></i>Upcoming & Active Examinations</h5>
-                <a href="/templates/student/exams/available.html" class="text-info small text-decoration-none">View All &rarr;</a>
+                <h5 class="fw-bold m-0 text-dark"><i class="bi bi-calendar-event text-info me-2"></i>Upcoming & Active Examinations</h5>
+                <a href="/student/exams/available.html" class="text-info small text-decoration-none">View All &rarr;</a>
               </div>
 
-              <div class="p-3 bg-dark rounded border border-secondary mb-3 d-flex align-items-center justify-content-between">
+              <div class="p-3 rounded border section-bg mb-3 d-flex align-items-center justify-content-between">
                 <div>
                   <div class="d-flex align-items-center gap-2 mb-1">
                     <span class="status-badge badge-active">REGISTERED & ONGOING</span>
                     <span class="font-monospace text-muted small">EXAM-DBMS-MID</span>
                   </div>
-                  <h6 class="fw-bold m-0 text-white">DBMS Mid-Term Assessment</h6>
+                  <h6 class="fw-bold m-0 text-dark">DBMS Mid-Term Assessment</h6>
                   <small class="text-muted"><i class="bi bi-clock me-1"></i> Duration: 60 min &bull; Total Marks: 100</small>
                 </div>
-                <a href="/templates/exam_runtime/lobby.html" class="btn btn-sm btn-success fw-bold px-3 py-2">
+                <a href="/exam_runtime/lobby.html" class="btn btn-sm btn-success fw-bold px-3 py-2">
                   <i class="bi bi-play-fill me-1"></i> Enter Exam
                 </a>
               </div>
 
-              <div class="p-3 bg-dark rounded border border-secondary d-flex align-items-center justify-content-between">
+              <div class="p-3 rounded border section-bg d-flex align-items-center justify-content-between">
                 <div>
                   <div class="d-flex align-items-center gap-2 mb-1">
                     <span class="status-badge badge-scheduled">REGISTRATION OPEN</span>
                     <span class="font-monospace text-muted small">EXAM-FSWD-FINAL</span>
                   </div>
-                  <h6 class="fw-bold m-0 text-white">Full Stack Web Dev Assessment</h6>
+                  <h6 class="fw-bold m-0 text-dark">Full Stack Web Dev Assessment</h6>
                   <small class="text-muted"><i class="bi bi-calendar me-1"></i> Tomorrow, 10:00 AM &bull; Total Marks: 100</small>
                 </div>
                 <button class="btn btn-sm btn-outline-info" onclick="showToast('Registered for Full Stack Web Dev Assessment!', 'success')">
@@ -173,12 +173,12 @@
             <!-- Recent Results Widget -->
             <div class="glass-card p-4">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold m-0"><i class="bi bi-trophy text-warning me-2"></i>Recent Published Results</h5>
-                <a href="/templates/student/results/list.html" class="text-info small text-decoration-none">View Marksheet &rarr;</a>
+                <h5 class="fw-bold m-0 text-dark"><i class="bi bi-trophy text-warning me-2"></i>Recent Published Results</h5>
+                <a href="/student/results/list.html" class="text-info small text-decoration-none">View Marksheet &rarr;</a>
               </div>
 
               <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle small m-0">
+                <table class="table table-hover align-middle small m-0">
                   <thead>
                     <tr class="text-muted">
                       <th>Exam Code</th>
@@ -194,7 +194,7 @@
                       <td><strong class="text-emerald">100.00%</strong></td>
                       <td><span class="badge bg-primary">A+</span></td>
                       <td><span class="badge bg-success">PASSED</span></td>
-                      <td><a href="/templates/student/results/detail.html" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i> View</a></td>
+                      <td><a href="/student/results/detail.html" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i> View</a></td>
                     </tr>
                   </tbody>
                 </table>
@@ -205,7 +205,7 @@
           <!-- Performance Summary Chart / Metrics Widget -->
           <div class="col-lg-5">
             <div class="glass-card p-4 h-100">
-              <h5 class="fw-bold mb-3"><i class="bi bi-bar-chart-line text-emerald me-2"></i>Performance Trends</h5>
+              <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-bar-chart-line text-emerald me-2"></i>Performance Trends</h5>
               <p class="text-muted small">Academic performance metric trend across exam submissions</p>
 
               <div class="mb-4">
@@ -213,21 +213,21 @@
                   <span>Database Management Systems (CS101)</span>
                   <span class="text-emerald fw-bold">100%</span>
                 </div>
-                <div class="progress bg-dark mb-3" style="height: 10px;">
+                <div class="progress bg-light mb-3" style="height: 10px;">
                   <div class="progress-bar bg-success" style="width: 100%;"></div>
                 </div>
 
                 <div class="d-flex justify-content-between small mb-1">
-                  <span>Operating Systems (CS103)</span>
+                  <span>Full Stack Web Development (CS102)</span>
                   <span class="text-info fw-bold">85%</span>
                 </div>
-                <div class="progress bg-dark" style="height: 10px;">
+                <div class="progress bg-light" style="height: 10px;">
                   <div class="progress-bar bg-info" style="width: 85%;"></div>
                 </div>
               </div>
 
-              <div class="p-3 bg-dark rounded border border-secondary">
-                <h6 class="fw-bold text-white small mb-2"><i class="bi bi-shield-check text-success me-1"></i>Academic Status</h6>
+              <div class="p-3 rounded border section-bg">
+                <h6 class="fw-bold text-dark small mb-2"><i class="bi bi-shield-check text-success me-1"></i>Academic Status</h6>
                 <p class="text-muted small m-0">All prerequisite submissions completed. Eligible for all upcoming semester final assessments.</p>
               </div>
             </div>
