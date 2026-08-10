@@ -11,7 +11,7 @@
 <body>
 
   <div class="app-wrapper">
-    <aside class="sidebar">
+        <aside class="sidebar">
       <div class="sidebar-header">
         <a href="/" class="sidebar-brand">
           <i class="bi bi-mortarboard-fill"></i>
@@ -21,37 +21,37 @@
       <div class="sidebar-nav">
         <div class="nav-section-title">Faculty Portal</div>
         <div class="nav-item">
-          <a href="/templates/faculty/dashboard.html" class="nav-link active">
+          <a href="/faculty/dashboard.html" class="nav-link active">
             <i class="bi bi-grid-1x2-fill"></i>
             <span>Dashboard</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/questions/list.html" class="nav-link">
+          <a href="/questions/list.html" class="nav-link ">
             <i class="bi bi-question-square-fill"></i>
             <span>Question Bank</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/exams/list.html" class="nav-link">
+          <a href="/exams/list.html" class="nav-link ">
             <i class="bi bi-card-checklist"></i>
             <span>Exam Management</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/evaluation/pending.html" class="nav-link">
+          <a href="/evaluation/pending.html" class="nav-link ">
             <i class="bi bi-pencil-square"></i>
             <span>Evaluations</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/subjects/list.html" class="nav-link">
+          <a href="/subjects/list.html" class="nav-link ">
             <i class="bi bi-book-fill"></i>
             <span>Subjects</span>
           </a>
         </div>
         <div class="nav-item">
-          <a href="/templates/reports/exam_report.html" class="nav-link">
+          <a href="/reports/exam_report.html" class="nav-link ">
             <i class="bi bi-bar-chart-fill"></i>
             <span>Analytics</span>
           </a>
@@ -66,6 +66,39 @@
           <input type="text" placeholder="Search questions, exams, evaluation queue...">
         </div>
         <div class="navbar-actions">
+          <!-- Notification Bell Dropdown -->
+          <div class="dropdown me-2">
+            <button class="icon-btn" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+              <i class="bi bi-bell-fill"></i>
+              <span class="badge-dot"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end shadow border bg-white p-0 mt-2" style="width: 340px;" aria-labelledby="notifDropdown">
+              <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
+                <h6 class="m-0 fw-bold text-dark">Notifications</h6>
+                <span class="badge bg-primary rounded-pill">3 New</span>
+              </div>
+              <div class="list-group list-group-flush small" style="max-height: 280px; overflow-y: auto;">
+                <a href="/notifications/center.html" class="list-group-item list-group-item-action p-3">
+                  <div class="d-flex w-100 justify-content-between mb-1">
+                    <strong class="text-info"><i class="bi bi-award me-1"></i> Result Published</strong>
+                    <small class="text-muted">10m ago</small>
+                  </div>
+                  <p class="mb-1 text-muted">Your result for DBMS Mid-Term Assessment is now available.</p>
+                </a>
+                <a href="/notifications/center.html" class="list-group-item list-group-item-action p-3">
+                  <div class="d-flex w-100 justify-content-between mb-1">
+                    <strong class="text-warning"><i class="bi bi-clock me-1"></i> Exam Reminder</strong>
+                    <small class="text-muted">1h ago</small>
+                  </div>
+                  <p class="mb-1 text-muted">Full Stack Web Development exam starts in 2 hours.</p>
+                </a>
+              </div>
+              <div class="p-2 text-center border-top">
+                <a href="/notifications/center.html" class="text-decoration-none small text-info fw-semibold">View All Notifications</a>
+              </div>
+            </div>
+          </div>
+          <!-- User Profile Dropdown -->
           <div class="dropdown">
             <div class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
               <div class="avatar" style="background: var(--mmcoe-navy);">F</div>
@@ -73,9 +106,10 @@
                 <span class="user-name">Dr. Rajesh Sharma</span>
                 <span class="user-role">Faculty (ID: 2)</span>
               </div>
+              <i class="bi bi-chevron-down ms-1 text-muted" style="font-size: 0.75rem;"></i>
             </div>
-            <ul class="dropdown-menu dropdown-menu-end shadow">
-              <li><a class="dropdown-item text-danger" href="/templates/auth/login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            <ul class="dropdown-menu dropdown-menu-end shadow border mt-2">
+              <li><a class="dropdown-item text-danger" href="/auth/login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
             </ul>
           </div>
         </div>
@@ -96,10 +130,10 @@
             <p class="text-muted small m-0">Department of Computer Engineering &bull; MMCOE Pune</p>
           </div>
           <div class="d-flex gap-2">
-            <a href="/templates/questions/create.html" class="btn btn-outline-info">
+            <a href="/questions/create.html" class="btn btn-outline-info">
               <i class="bi bi-plus-circle"></i> Add Question
             </a>
-            <a href="/templates/exams/create.html" class="btn btn-primary-custom">
+            <a href="/exams/create.html" class="btn btn-primary-custom">
               <i class="bi bi-plus-lg"></i> Create Exam
             </a>
           </div>
@@ -151,7 +185,7 @@
             <div class="glass-card p-4 mb-4">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold m-0"><i class="bi bi-pencil-square text-warning me-2"></i>Pending Candidate Evaluations</h5>
-                <a href="/templates/evaluation/pending.html" class="text-info small text-decoration-none">Full Queue &rarr;</a>
+                <a href="/evaluation/pending.html" class="text-info small text-decoration-none">Full Queue &rarr;</a>
               </div>
 
               <div class="table-responsive">
@@ -171,14 +205,14 @@
                       <td><span class="font-monospace">EXAM-DBMS-MID</span></td>
                       <td class="text-muted">02:30 PM</td>
                       <td><strong class="text-emerald">100.00</strong></td>
-                      <td><a href="/templates/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">Evaluate</a></td>
+                      <td><a href="/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">Evaluate</a></td>
                     </tr>
                     <tr>
                       <td class="fw-semibold">Shlok Powar</td>
                       <td><span class="font-monospace">EXAM-DBMS-MID</span></td>
                       <td class="text-muted">02:35 PM</td>
                       <td><strong class="text-emerald">90.00</strong></td>
-                      <td><a href="/templates/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">Evaluate</a></td>
+                      <td><a href="/evaluation/evaluate.html" class="btn btn-sm btn-outline-success">Evaluate</a></td>
                     </tr>
                   </tbody>
                 </table>
@@ -239,8 +273,8 @@
               <div class="p-3 rounded border section-bg">
                 <h6 class="fw-bold text-dark small mb-2"><i class="bi bi-gear-fill me-1 text-warning"></i>Quick Shortcuts</h6>
                 <div class="d-grid gap-2">
-                  <a href="/templates/reports/exam_report.html" class="btn btn-sm btn-outline-light text-start"><i class="bi bi-bar-chart me-2"></i> View Exam Performance Analytics</a>
-                  <a href="/templates/questions/list.html" class="btn btn-sm btn-outline-light text-start"><i class="bi bi-question-square me-2"></i> Manage Question Blueprint</a>
+                  <a href="/reports/exam_report.html" class="btn btn-sm btn-outline-light text-start"><i class="bi bi-bar-chart me-2"></i> View Exam Performance Analytics</a>
+                  <a href="/questions/list.html" class="btn btn-sm btn-outline-light text-start"><i class="bi bi-question-square me-2"></i> Manage Question Blueprint</a>
                 </div>
               </div>
             </div>
