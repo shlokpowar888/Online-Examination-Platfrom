@@ -827,3 +827,29 @@ body {
   border: 1px solid currentColor;
 }
 
+/* ============================
+   CSV DRAG & DROP ZONE
+   ============================ */
+.csv-drop-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-section);
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.csv-drop-zone:hover, .csv-drop-zone.dragover {
+  border-color: var(--primary);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.csv-drop-zone i.drop-icon {
+  font-size: 2.5rem;
+  color: var(--primary);
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+
