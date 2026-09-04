@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Examination Guidelines & Support - MMCOE Student Portal{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a href="/student/dashboard.html">Student</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Help & Rules</li>
+  </ol>
+</nav>
+
+<!-- Page Header -->
+<div class="mb-4">
+  <h3 class="fw-bold m-0 text-dark">Online Examination Rules & Technical Guidelines</h3>
+  <p class="text-muted small m-0">Policies, proctoring requirements, technical troubleshooting, and institutional support</p>
+</div>
+
+<!-- Rules & Guidelines Accordion / Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-8">
+    <div class="glass-card p-4 mb-4">
+      <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-check text-primary me-2"></i>Academic Code of Conduct</h5>
+      
+      <div class="d-flex flex-column gap-3 small">
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">1. Fullscreen Enforcement</h6>
+          <p class="text-muted m-0">The examination runtime initiates in mandatory fullscreen. Departing fullscreen triggers an immediate cautionary toast and notifies the faculty proctor via the real-time telemetry stream.</p>
+        </div>
+
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">2. Tab Switching & Focus Loss Detection</h6>
+          <p class="text-muted m-0">Opening alternate browser tabs, switching applications, or interacting with background windows is strictly prohibited and logged with timestamp and duration metrics in the immutable audit ledger.</p>
+        </div>
+
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">3. Server-Side Continuous Autosave</h6>
+          <p class="text-muted m-0">Your answers are transmitted and persisted to the institutional database upon every radio button or checkbox interaction. In the event of network disruption, you can reconnect without losing previously saved responses.</p>
+        </div>
+
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">4. Server Countdown Expiry</h6>
+          <p class="text-muted m-0">Exam timers run synchronously against server time. When the scheduled time reaches zero, active submissions are sealed and submitted automatically.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="glass-card p-4 mb-4">
+      <h6 class="fw-bold text-dark mb-3"><i class="bi bi-headset text-danger me-2"></i>Technical Support & Helpdesk</h6>
+      <p class="text-muted small mb-3">Encountering browser issues or network interruptions during live assessments?</p>
+      
+      <div class="p-3 rounded border section-bg small mb-3">
+        <div class="fw-semibold text-dark mb-1">IT Examination Cell</div>
+        <div class="text-muted">MMCOE Ground Floor, Computer Lab 3</div>
+        <div class="text-dark mt-1"><i class="bi bi-telephone me-1 text-primary"></i> 020-2547-1002</div>
+        <div class="text-dark"><i class="bi bi-envelope me-1 text-primary"></i> examcell@mmcoe.edu.in</div>
+      </div>
+
+      <div class="p-3 rounded border bg-light small text-muted">
+        <strong>Supported Browsers:</strong><br>
+        Google Chrome (v90+), Microsoft Edge (v90+), Mozilla Firefox (v88+). Ensure popup blockers are disabled.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -18,1923 +18,732 @@
 | System Monitoring | System Monitoring |
 | Notification Service | Notification Module |
 
-# TablesWithAttributsConstraints
+# Database Info
 
-Perfect. We'll make this **implementation-ready**, not conceptual.
+# **Final Database Design — 15 Tables**
 
-One important note before we start:
+I would use **15 tables**, with views and triggers handling derived/reporting functionality.
 
-During **DB-003**, we identified that **RolePermission** is required as the junction table for RBAC. Therefore, the Identity & Access domain consists of **6 tables**:
+USER & ACCESS  
+│  
+├── Role  
+└── User  
+      │  
+      ├── Student  
+      └── Faculty  
+             │  
+             └── Department  
+                    │  
+                    └── Subject  
+                           │  
+                           └── Exam  
+                                │  
+              ┌───────────────┼────────────────┐  
+              │               │                │  
+        ExamSchedule    ExamQuestion     CandidateRegistration  
+              │               │                │  
+              │               │                ▼  
+              │               │          ExamAttempt  
+              │               │                │  
+              │               │                ▼  
+              │               │          StudentAnswer  
+              │               │  
+              │               │  
+              │               └── Question  
+              │                    │  
+              │                    └── QuestionOption  
+              │  
+              └───────────────────────────────
 
-1. Role  
-2. Permission  
-3. RolePermission  
-4. User  
-5. UserSession  
-6. LoginHistory
+ExamAttempt ───────────────► Result
+
+User ──────────────────────► Notification  
+User ──────────────────────► AuditLog  
+ExamAttempt ───────────────► AuditLog
+
+### **The 15 tables**
+
+1. `Role`  
+2. `User`  
+3. `Department`  
+4. `Student`  
+5. `Faculty`  
+6. `Subject`  
+7. `Exam`  
+8. `ExamSchedule`  
+9. `Question`  
+10. `QuestionOption`  
+11. `ExamQuestion`  
+12. `CandidateRegistration`  
+13. `ExamAttempt`  
+14. `StudentAnswer`  
+15. `Result`  
+16. `Notification`  
+17. `AuditLog`
+
+Actually, counting that carefully, it is **17**, not 15\. And I don't want to artificially call it 15 just to satisfy the "reduce tables" goal.
+
+**17 is the final number I recommend if we must preserve the SRS functionality cleanly and maintain 3NF.**
+
+The important thing is that we've removed unnecessary tables such as `Evaluation`, `QuestionPaper`, `Report`, `ResultDetails`, `ExamStatistics`, etc.
 
 ---
 
-# **PART 1 — Identity & Access Database Specification**
-
----
-
-# **Table 1 — Role**
+# **1\. Role**
 
 ### **Purpose**
 
-Stores all system roles used for Role-Based Access Control (RBAC).
+Stores the three system roles required for RBAC.
 
-### **Columns**
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `RoleID` | BIGINT | PK, AUTO\_INCREMENT |
+| `RoleName` | VARCHAR(30) | NOT NULL, UNIQUE |
+| `Description` | VARCHAR(255) | NULL |
+| `IsActive` | BOOLEAN | NOT NULL, DEFAULT TRUE |
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| roleId | BIGSERIAL | NO | Auto |
-| roleName | VARCHAR(50) | NO | — |
-| description | VARCHAR(255) | YES | NULL |
-| isActive | BOOLEAN | NO | TRUE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-| createdBy | BIGINT | YES | NULL |
-| updatedBy | BIGINT | YES | NULL |
+### **Initial records**
 
-### **Primary Key**
+1 → ADMIN  
+2 → FACULTY  
+3 → STUDENT
 
-* roleId
-
-### **Foreign Keys**
-
-None
-
-### **Unique Constraints**
-
-* roleName
-
-### **Check Constraints**
-
-CHAR\_LENGTH(roleName) \>= 3
-
-### **Indexes**
-
-PK(roleId)
-
-UNIQUE(roleName)
-
-### **Delete Rule**
-
-RESTRICT
+This satisfies the SRS requirement for database-driven RBAC.
 
 ---
 
-# **Table 2 — Permission**
+# **2\. User**
 
-### **Purpose**
+This is the common identity table.
 
-Stores all available permissions in the system.
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `UserID` | BIGINT | PK, AUTO\_INCREMENT |
+| `RoleID` | BIGINT | FK → Role |
+| `FirstName` | VARCHAR(50) | NOT NULL |
+| `LastName` | VARCHAR(50) | NOT NULL |
+| `Email` | VARCHAR(255) | NOT NULL, UNIQUE |
+| `Phone` | VARCHAR(15) | UNIQUE, NULL |
+| `PasswordHash` | VARCHAR(255) | NOT NULL |
+| `IsActive` | BOOLEAN | NOT NULL, DEFAULT TRUE |
+| `CreatedAt` | DATETIME | NOT NULL, DEFAULT CURRENT\_TIMESTAMP |
+| `UpdatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP ON UPDATE |
 
-### **Columns**
+### **Relationship**
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| permissionId | BIGSERIAL | NO | Auto |
-| permissionName | VARCHAR(100) | NO | — |
-| moduleName | VARCHAR(50) | NO | — |
-| description | VARCHAR(255) | YES | NULL |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
+Role 1 ─────── M User
 
-### **Primary Key**
-
-permissionId
-
-### **Foreign Keys**
-
-None
-
-### **Unique Constraints**
-
-(permissionName, moduleName)
-
-### **Check Constraints**
-
-CHAR\_LENGTH(permissionName) \> 2
-
-### **Indexes**
-
-PK(permissionId)
-
-UNIQUE(permissionName,moduleName)
-
-### **Delete Rule**
-
-RESTRICT
+Do **not** store plain-text passwords. Your Flask application stores the Argon2id hash.
 
 ---
 
-# **Table 3 — RolePermission**
+# **3\. Department**
 
-### **Purpose**
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `DepartmentID` | BIGINT | PK, AUTO\_INCREMENT |
+| `DepartmentCode` | VARCHAR(20) | NOT NULL, UNIQUE |
+| `DepartmentName` | VARCHAR(100) | NOT NULL, UNIQUE |
+| `Description` | VARCHAR(255) | NULL |
+| `IsActive` | BOOLEAN | DEFAULT TRUE |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
 
-Maps permissions to roles.
+### **Relationships**
 
-### **Columns**
+Department 1 ───── M Subject  
+Department 1 ───── M Student  
+Department 1 ───── M Faculty
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| rolePermissionId | BIGSERIAL | NO | Auto |
-| roleId | BIGINT | NO | — |
-| permissionId | BIGINT | NO | — |
-| grantedAt | TIMESTAMPTZ | NO | NOW() |
-| grantedBy | BIGINT | YES | NULL |
-
-### **Primary Key**
-
-rolePermissionId
-
-### **Foreign Keys**
-
-roleId → Role(roleId)
-
-permissionId → Permission(permissionId)
-
-grantedBy → User(userId)
-
-### **Unique Constraints**
-
-(roleId, permissionId)
-
-### **Check Constraints**
-
-None
-
-### **Indexes**
-
-PK(rolePermissionId)
-
-INDEX(roleId)
-
-INDEX(permissionId)
-
-UNIQUE(roleId,permissionId)
-
-### **Delete Rules**
-
-Role → CASCADE
-
-Permission → CASCADE
+This preserves the SRS's Department Management requirement without creating unnecessary academic tables.
 
 ---
 
-# **Table 4 — User**
+# **4\. Student**
 
-### **Purpose**
+Student-specific information belongs here rather than putting everything into `User`.
 
-Stores every authenticated user of the system.
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `StudentID` | BIGINT | PK, AUTO\_INCREMENT |
+| `UserID` | BIGINT | FK → User, UNIQUE |
+| `DepartmentID` | BIGINT | FK → Department |
+| `RollNumber` | VARCHAR(30) | NOT NULL, UNIQUE |
+| `EnrollmentNumber` | VARCHAR(30) | NOT NULL, UNIQUE |
+| `Year` | SMALLINT | NOT NULL |
+| `Semester` | SMALLINT | NOT NULL |
+| `IsActive` | BOOLEAN | DEFAULT TRUE |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
 
-### **Columns**
+### **Relationship**
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| userId | BIGSERIAL | NO | Auto |
-| firstName | VARCHAR(50) | NO | — |
-| lastName | VARCHAR(50) | NO | — |
-| email | VARCHAR(255) | NO | — |
-| phone | VARCHAR(15) | YES | NULL |
-| passwordHash | TEXT | NO | — |
-| roleId | BIGINT | NO | — |
-| isActive | BOOLEAN | NO | TRUE |
-| lastLogin | TIMESTAMPTZ | YES | NULL |
-| failedLoginAttempts | INTEGER | NO | 0 |
-| accountLocked | BOOLEAN | NO | FALSE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-| createdBy | BIGINT | YES | NULL |
-| updatedBy | BIGINT | YES | NULL |
+User 1 ───── 1 Student  
+Department 1 ───── M Student
 
-### **Primary Key**
-
-userId
-
-### **Foreign Keys**
-
-roleId → Role(roleId)
-
-createdBy → User(userId)
-
-updatedBy → User(userId)
-
-### **Unique Constraints**
-
-email
-
-phone
-
-### **Check Constraints**
-
-failedLoginAttempts \>= 0
-
-### **Indexes**
-
-PK(userId)
-
-UNIQUE(email)
-
-UNIQUE(phone)
-
-INDEX(roleId)
-
-INDEX(lastLogin)
-
-### **Delete Rule**
-
-RESTRICT
+The `UNIQUE(UserID)` makes this a 1:1 relationship.
 
 ---
 
-# **Table 5 — UserSession**
+# **5\. Faculty**
 
-### **Purpose**
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `FacultyID` | BIGINT | PK, AUTO\_INCREMENT |
+| `UserID` | BIGINT | FK → User, UNIQUE |
+| `DepartmentID` | BIGINT | FK → Department |
+| `EmployeeID` | VARCHAR(30) | NOT NULL, UNIQUE |
+| `Designation` | VARCHAR(50) | NULL |
+| `IsActive` | BOOLEAN | DEFAULT TRUE |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
 
-Maintains active and historical login sessions.
+### **Relationships**
 
-### **Columns**
+User 1 ───── 1 Faculty  
+Department 1 ───── M Faculty  
+---
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| sessionId | UUID | NO | gen\_random\_uuid() |
-| userId | BIGINT | NO | — |
-| loginTime | TIMESTAMPTZ | NO | NOW() |
-| logoutTime | TIMESTAMPTZ | YES | NULL |
-| ipAddress | INET | NO | — |
-| userAgent | TEXT | YES | NULL |
-| deviceType | VARCHAR(30) | YES | NULL |
-| sessionStatus | VARCHAR(20) | NO | 'ACTIVE' |
-| expiresAt | TIMESTAMPTZ | NO | — |
+# **6\. Subject**
 
-### **Primary Key**
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `SubjectID` | BIGINT | PK, AUTO\_INCREMENT |
+| `DepartmentID` | BIGINT | FK → Department |
+| `SubjectCode` | VARCHAR(20) | NOT NULL, UNIQUE |
+| `SubjectName` | VARCHAR(100) | NOT NULL |
+| `Description` | TEXT | NULL |
+| `Credits` | SMALLINT | DEFAULT 0 |
+| `IsActive` | BOOLEAN | DEFAULT TRUE |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
+| `CreatedBy` | BIGINT | FK → User, NULL |
 
-sessionId
+### **Relationship**
 
-### **Foreign Keys**
+Department 1 ───── M Subject  
+Subject 1 ───── M Exam  
+---
 
-userId → User(userId)
+# **7\. Exam**
 
-### **Unique Constraints**
+This is the central examination definition.
 
-None
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `ExamID` | BIGINT | PK, AUTO\_INCREMENT |
+| `SubjectID` | BIGINT | FK → Subject |
+| `CreatedBy` | BIGINT | FK → User |
+| `ExamCode` | VARCHAR(30) | NOT NULL, UNIQUE |
+| `ExamTitle` | VARCHAR(150) | NOT NULL |
+| `ExamType` | VARCHAR(30) | NOT NULL |
+| `TotalMarks` | DECIMAL(6,2) | \> 0 |
+| `PassingMarks` | DECIMAL(6,2) | \>= 0, \<= TotalMarks |
+| `DurationMinutes` | INT | \> 0 |
+| `Instructions` | TEXT | NULL |
+| `MaximumAttempts` | SMALLINT | \>= 1 |
+| `ShuffleQuestions` | BOOLEAN | DEFAULT TRUE |
+| `ShuffleOptions` | BOOLEAN | DEFAULT TRUE |
+| `NegativeMarking` | BOOLEAN | DEFAULT FALSE |
+| `NegativeMarksPerQuestion` | DECIMAL(5,2) | \>= 0 |
+| `ExamStatus` | ENUM | DRAFT/SCHEDULED/ACTIVE/COMPLETED/CANCELLED |
+| `IsActive` | BOOLEAN | DEFAULT TRUE |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
 
-### **Check Constraints**
+### **Relationships**
 
-sessionStatus IN  
-('ACTIVE','EXPIRED','LOGGED\_OUT','INVALIDATED')
+Subject 1 ───── M Exam  
+User 1 ───── M Exam  
+---
 
-### **Indexes**
+# **8\. ExamSchedule**
 
-PK(sessionId)
+Keep this separate, as in your friend's design.
 
-INDEX(userId)
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `ScheduleID` | BIGINT | PK, AUTO\_INCREMENT |
+| `ExamID` | BIGINT | FK → Exam |
+| `StartTime` | DATETIME | NOT NULL |
+| `EndTime` | DATETIME | NOT NULL |
+| `RegistrationStart` | DATETIME | NULL |
+| `RegistrationEnd` | DATETIME | NULL |
+| `LateEntryMinutes` | INT | DEFAULT 0 |
+| `ScheduleStatus` | ENUM | SCHEDULED/ONGOING/COMPLETED/CANCELLED |
 
-INDEX(loginTime)
+### **Constraints**
 
-INDEX(expiresAt)
+EndTime \> StartTime  
+RegistrationEnd \>= RegistrationStart  
+LateEntryMinutes \>= 0
 
-INDEX(sessionStatus)
+### **Relationship**
 
-### **Delete Rule**
+Exam 1 ───── M ExamSchedule  
+---
 
-CASCADE
+# **9\. Question**
+
+I would remove `correctAnswer` from your friend's version because objective answers are already represented through `QuestionOption`.
+
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `QuestionID` | BIGINT | PK, AUTO\_INCREMENT |
+| `SubjectID` | BIGINT | FK → Subject |
+| `CreatedBy` | BIGINT | FK → User |
+| `QuestionType` | ENUM | MCQ/MSQ/TRUE\_FALSE/SHORT\_ANSWER/DESCRIPTIVE |
+| `QuestionText` | TEXT | NOT NULL |
+| `Explanation` | TEXT | NULL |
+| `DefaultMarks` | DECIMAL(5,2) | \> 0 |
+| `NegativeMarks` | DECIMAL(5,2) | \>= 0 |
+| `DifficultyLevel` | ENUM | EASY/MEDIUM/HARD |
+| `IsActive` | BOOLEAN | DEFAULT TRUE |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
+
+### **Relationship**
+
+Subject 1 ───── M Question  
+User 1 ───── M Question
+
+### **Why no `QuestionCategory` table?**
+
+Because we're aggressively reducing tables.
+
+For your current project, `DifficultyLevel` and category can be represented as controlled ENUM/domain values unless the SRS requires administrators to dynamically create categories.
+
+This removes **two additional tables**.
 
 ---
 
-# **Table 6 — LoginHistory**
+# **10\. QuestionOption**
 
-### **Purpose**
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `OptionID` | BIGINT | PK, AUTO\_INCREMENT |
+| `QuestionID` | BIGINT | FK → Question |
+| `OptionText` | TEXT | NOT NULL |
+| `OptionOrder` | INT | NOT NULL |
+| `IsCorrect` | BOOLEAN | DEFAULT FALSE |
 
-Maintains immutable authentication history for auditing and security analysis.
+### **Constraints**
 
-### **Columns**
+UNIQUE(QuestionID, OptionOrder)  
+OptionOrder \> 0
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| loginHistoryId | BIGSERIAL | NO | Auto |
-| userId | BIGINT | NO | — |
-| loginTime | TIMESTAMPTZ | NO | NOW() |
-| logoutTime | TIMESTAMPTZ | YES | NULL |
-| ipAddress | INET | NO | — |
-| userAgent | TEXT | YES | NULL |
-| loginStatus | VARCHAR(20) | NO | — |
-| failureReason | VARCHAR(255) | YES | NULL |
-| authenticationMethod | VARCHAR(30) | NO | 'PASSWORD' |
+### **Relationship**
 
-### **Primary Key**
+Question 1 ───── M QuestionOption
 
-loginHistoryId
-
-### **Foreign Keys**
-
-userId → User(userId)
-
-### **Unique Constraints**
-
-None
-
-### **Check Constraints**
-
-loginStatus IN  
-('SUCCESS','FAILED','LOCKED')
-
-authenticationMethod IN  
-('PASSWORD','OTP','SSO')
-
-### **Indexes**
-
-PK(loginHistoryId)
-
-INDEX(userId)
-
-INDEX(loginTime)
-
-INDEX(loginStatus)
-
-### **Delete Rule**
-
-RESTRICT (audit records should never be removed)
+For MCQ/MSQ/True-False questions, correctness is determined from `IsCorrect`.
 
 ---
 
-# **Identity & Access Summary**
+# **11\. ExamQuestion**
 
-| Table | Type |
-| ----- | ----- |
-| Role | Master |
-| Permission | Master |
-| RolePermission | Mapping |
-| User | Master |
-| UserSession | Transaction |
-| LoginHistory | Audit |
+This is the M:N bridge between examinations and questions.
 
----
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `ExamQuestionID` | BIGINT | PK, AUTO\_INCREMENT |
+| `ExamID` | BIGINT | FK → Exam |
+| `QuestionID` | BIGINT | FK → Question |
+| `QuestionOrder` | INT | NOT NULL |
+| `Marks` | DECIMAL(5,2) | \> 0 |
+| `NegativeMarks` | DECIMAL(5,2) | \>= 0 |
+| `IsMandatory` | BOOLEAN | DEFAULT TRUE |
 
-## **Notes / Refinements**
+### **Constraints**
 
-While reviewing the schema, I identified a few refinements that I recommend we consider before freezing the database design:
+UNIQUE(ExamID, QuestionID)  
+UNIQUE(ExamID, QuestionOrder)
 
-1. **`User` vs `Student`/`Faculty` specialization** – Earlier we discussed a single `User` entity with role-based differentiation. We should later decide whether student- and faculty-specific attributes belong in separate profile tables or remain within a unified user model.  
-2. **Permission granularity** – We should decide whether permissions are simple strings (e.g., `CREATE_EXAM`) or resource-action pairs (`Exam:Create`). The latter scales better for RBAC.  
-3. **Session storage** – Using a `UUID` for `sessionId` is preferable over `BIGSERIAL` because session identifiers should be unpredictable from a security standpoint.
+### **Relationship**
 
-Overall, this part provides a solid implementation-ready foundation for the Identity & Access domain and can be translated directly into PostgreSQL DDL in a later implementation phase.
+Exam M ───── N Question  
+       through  
+     ExamQuestion
 
-# **PART 2 — Academic & Examination Management Database Specification**
-
-This section covers the following tables:
-
-1. Subject  
-2. Exam  
-3. ExamSchedule  
-4. CandidateRegistration
+This is one of the strongest parts of your friend's design, so we're keeping it.
 
 ---
 
-# **Table 7 — Subject**
+# **12\. CandidateRegistration**
 
-### **Purpose**
+I would keep this.
 
-Stores all academic subjects for which examinations are conducted.
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `RegistrationID` | BIGINT | PK, AUTO\_INCREMENT |
+| `ExamID` | BIGINT | FK → Exam |
+| `StudentID` | BIGINT | FK → Student |
+| `RegistrationTime` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
+| `RegistrationStatus` | ENUM | REGISTERED/CANCELLED/WAITLISTED |
+| `EligibilityVerified` | BOOLEAN | DEFAULT FALSE |
+| `Remarks` | VARCHAR(255) | NULL |
 
-### **Columns**
+### **Critical constraint**
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| subjectId | BIGSERIAL | NO | Auto |
-| subjectCode | VARCHAR(20) | NO | — |
-| subjectName | VARCHAR(100) | NO | — |
-| description | TEXT | YES | NULL |
-| credits | SMALLINT | YES | NULL |
-| isActive | BOOLEAN | NO | TRUE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-| createdBy | BIGINT | YES | NULL |
-| updatedBy | BIGINT | YES | NULL |
+UNIQUE(ExamID, StudentID)
 
-### **Primary Key**
+### **Relationship**
 
-* subjectId
+Student 1 ───── M CandidateRegistration  
+Exam 1 ───── M CandidateRegistration
 
-### **Foreign Keys**
+Therefore:
 
-* createdBy → User(userId)  
-* updatedBy → User(userId)
-
-### **Unique Constraints**
-
-* subjectCode  
-* subjectName
-
-### **Check Constraints**
-
-credits \>= 0
-
-### **Indexes**
-
-PK(subjectId)
-
-UNIQUE(subjectCode)
-
-UNIQUE(subjectName)
-
-INDEX(isActive)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 8 — Exam**
-
-### **Purpose**
-
-Stores the master definition of an examination.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| examId | BIGSERIAL | NO | Auto |
-| subjectId | BIGINT | NO | — |
-| examCode | VARCHAR(30) | NO | — |
-| examTitle | VARCHAR(150) | NO | — |
-| examType | VARCHAR(30) | NO | — |
-| totalMarks | NUMERIC(6,2) | NO | — |
-| passingMarks | NUMERIC(6,2) | NO | — |
-| durationMinutes | INTEGER | NO | — |
-| instructions | TEXT | YES | NULL |
-| maximumAttempts | SMALLINT | NO | 1 |
-| shuffleQuestions | BOOLEAN | NO | TRUE |
-| shuffleOptions | BOOLEAN | NO | TRUE |
-| negativeMarking | BOOLEAN | NO | FALSE |
-| negativeMarksPerQuestion | NUMERIC(5,2) | NO | 0 |
-| examStatus | VARCHAR(20) | NO | 'DRAFT' |
-| isActive | BOOLEAN | NO | TRUE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-| createdBy | BIGINT | YES | NULL |
-| updatedBy | BIGINT | YES | NULL |
-
-### **Primary Key**
-
-* examId
-
-### **Foreign Keys**
-
-* subjectId → Subject(subjectId)  
-* createdBy → User(userId)  
-* updatedBy → User(userId)
-
-### **Unique Constraints**
-
-* examCode
-
-### **Check Constraints**
-
-totalMarks \> 0
-
-passingMarks \>= 0
-
-passingMarks \<= totalMarks
-
-durationMinutes \> 0
-
-maximumAttempts \>= 1
-
-negativeMarksPerQuestion \>= 0
-
-examStatus IN  
-('DRAFT','SCHEDULED','ACTIVE','COMPLETED','CANCELLED')
-
-### **Indexes**
-
-PK(examId)
-
-UNIQUE(examCode)
-
-INDEX(subjectId)
-
-INDEX(examStatus)
-
-INDEX(isActive)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 9 — ExamSchedule**
-
-### **Purpose**
-
-Stores scheduling information for each examination.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| scheduleId | BIGSERIAL | NO | Auto |
-| examId | BIGINT | NO | — |
-| startTime | TIMESTAMPTZ | NO | — |
-| endTime | TIMESTAMPTZ | NO | — |
-| registrationStart | TIMESTAMPTZ | YES | NULL |
-| registrationEnd | TIMESTAMPTZ | YES | NULL |
-| lateEntryMinutes | INTEGER | NO | 0 |
-| autoSubmit | BOOLEAN | NO | TRUE |
-| scheduleStatus | VARCHAR(20) | NO | 'SCHEDULED' |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* scheduleId
-
-### **Foreign Keys**
-
-* examId → Exam(examId)
-
-### **Unique Constraints**
-
-None
-
-### **Check Constraints**
-
-endTime \> startTime
-
-registrationEnd \>= registrationStart
-
-lateEntryMinutes \>= 0
-
-scheduleStatus IN  
-('SCHEDULED','ONGOING','COMPLETED','CANCELLED')
-
-### **Indexes**
-
-PK(scheduleId)
-
-INDEX(examId)
-
-INDEX(startTime)
-
-INDEX(endTime)
-
-INDEX(scheduleStatus)
-
-### **Delete Rule**
-
-CASCADE
-
----
-
-# **Table 10 — CandidateRegistration**
-
-### **Purpose**
-
-Stores student registrations for examinations.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| registrationId | BIGSERIAL | NO | Auto |
-| examId | BIGINT | NO | — |
-| userId | BIGINT | NO | — |
-| registrationTime | TIMESTAMPTZ | NO | NOW() |
-| registrationStatus | VARCHAR(20) | NO | 'REGISTERED' |
-| eligibilityVerified | BOOLEAN | NO | FALSE |
-| paymentRequired | BOOLEAN | NO | FALSE |
-| paymentStatus | VARCHAR(20) | NO | 'NOT\_REQUIRED' |
-| remarks | VARCHAR(255) | YES | NULL |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* registrationId
-
-### **Foreign Keys**
-
-* examId → Exam(examId)  
-* userId → User(userId)
-
-### **Unique Constraints**
-
-* (examId, userId)
-
-### **Check Constraints**
-
-registrationStatus IN  
-('REGISTERED','CANCELLED','WAITLISTED')
-
-paymentStatus IN  
-('NOT\_REQUIRED','PENDING','PAID','FAILED')
-
-### **Indexes**
-
-PK(registrationId)
-
-UNIQUE(examId,userId)
-
-INDEX(userId)
-
-INDEX(examId)
-
-INDEX(registrationStatus)
-
-INDEX(paymentStatus)
-
-### **Delete Rule**
-
-* Exam → RESTRICT if registrations exist  
-* User → RESTRICT
-
----
-
-# **Academic & Examination Management Summary**
-
-| Table | Type |
-| ----- | ----- |
-| Subject | Master |
-| Exam | Master |
-| ExamSchedule | Transaction |
-| CandidateRegistration | Transaction |
-
----
-
-# **Refinements Identified**
-
-While reviewing this part of the schema, I identified a few improvements that I recommend we incorporate before implementation:
-
-### **1\. Separate Exam Definition from Exam Instance**
-
-Currently, `Exam` stores both the exam definition and scheduling-related configuration. If the system later supports multiple sessions of the same exam (e.g., different batches or makeup exams), we may consider moving session-specific settings (such as `shuffleQuestions`, `shuffleOptions`, and `negativeMarking`) into `ExamSchedule` or a separate `ExamSession` table. For the current project scope, the present design is sufficient.
-
----
-
-### **2\. Registration Eligibility**
-
-If eligibility rules become more complex (attendance, prerequisites, semester restrictions), they should be handled by business logic rather than additional columns. The `eligibilityVerified` flag simply records the outcome.
-
----
-
-### **3\. Future-Proofing**
-
-The current schema can accommodate future additions such as:
-
-* Multiple examination sessions  
-* Registration approval workflow  
-* Hall ticket generation  
-* Fee management  
-* Different examination modes (online/offline/hybrid)
-
-without requiring major redesign.
-
----
-
-**Part 2 Complete ✅**
-
-The next section (**Part 3**) will cover the **Question Bank**, including:
-
-1. Question  
-2. QuestionCategory  
-3. DifficultyLevel  
-4. ExamQuestion
-
-This is where the core examination content model will be defined.
-
-# **PART 3 — Question Bank Database Specification**
-
-This section covers the following tables:
-
-1. QuestionCategory  
-2. DifficultyLevel  
-3. Question  
-4. ExamQuestion
-
-> **Note:** I intentionally ordered the tables based on dependencies so that parent tables are defined before child tables.
-
----
-
-# **Table 11 — QuestionCategory**
-
-### **Purpose**
-
-Stores the classification of questions (e.g., Programming, DBMS, Networking).
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| categoryId | BIGSERIAL | NO | Auto |
-| categoryName | VARCHAR(100) | NO | — |
-| description | VARCHAR(255) | YES | NULL |
-| isActive | BOOLEAN | NO | TRUE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-| createdBy | BIGINT | YES | NULL |
-| updatedBy | BIGINT | YES | NULL |
-
-### **Primary Key**
-
-* categoryId
-
-### **Foreign Keys**
-
-* createdBy → User(userId)  
-* updatedBy → User(userId)
-
-### **Unique Constraints**
-
-* categoryName
-
-### **Check Constraints**
-
-CHAR\_LENGTH(categoryName) \>= 3
-
-### **Indexes**
-
-PK(categoryId)
-
-UNIQUE(categoryName)
-
-INDEX(isActive)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 12 — DifficultyLevel**
-
-### **Purpose**
-
-Stores standardized difficulty levels used throughout the question bank.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| difficultyLevelId | BIGSERIAL | NO | Auto |
-| levelName | VARCHAR(30) | NO | — |
-| difficultyScore | SMALLINT | NO | — |
-| description | VARCHAR(255) | YES | NULL |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* difficultyLevelId
-
-### **Foreign Keys**
-
-None
-
-### **Unique Constraints**
-
-* levelName  
-* difficultyScore
-
-### **Check Constraints**
-
-difficultyScore BETWEEN 1 AND 10
-
-### **Indexes**
-
-PK(difficultyLevelId)
-
-UNIQUE(levelName)
-
-UNIQUE(difficultyScore)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 13 — Question**
-
-### **Purpose**
-
-Stores every question available in the centralized Question Bank.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| questionId | BIGSERIAL | NO | Auto |
-| categoryId | BIGINT | NO | — |
-| difficultyLevelId | BIGINT | NO | — |
-| questionType | VARCHAR(30) | NO | — |
-| questionText | TEXT | NO | — |
-| optionA | TEXT | YES | NULL |
-| optionB | TEXT | YES | NULL |
-| optionC | TEXT | YES | NULL |
-| optionD | TEXT | YES | NULL |
-| correctOption | CHAR(1) | YES | NULL |
-| correctAnswer | TEXT | YES | NULL |
-| explanation | TEXT | YES | NULL |
-| defaultMarks | NUMERIC(5,2) | NO | 1 |
-| negativeMarks | NUMERIC(5,2) | NO | 0 |
-| estimatedTimeSeconds | INTEGER | YES | NULL |
-| isActive | BOOLEAN | NO | TRUE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-| createdBy | BIGINT | YES | NULL |
-| updatedBy | BIGINT | YES | NULL |
-
-### **Primary Key**
-
-* questionId
-
-### **Foreign Keys**
-
-* categoryId → QuestionCategory(categoryId)  
-* difficultyLevelId → DifficultyLevel(difficultyLevelId)  
-* createdBy → User(userId)  
-* updatedBy → User(userId)
-
-### **Unique Constraints**
-
-None
-
-### **Check Constraints**
-
-questionType IN  
-('MCQ','MSQ','TRUE\_FALSE','SHORT\_ANSWER','DESCRIPTIVE','CODING')
-
-defaultMarks \> 0
-
-negativeMarks \>= 0
-
-estimatedTimeSeconds \> 0
-
-correctOption IN ('A','B','C','D')
-
-### **Indexes**
-
-PK(questionId)
-
-INDEX(categoryId)
-
-INDEX(difficultyLevelId)
-
-INDEX(questionType)
-
-INDEX(isActive)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 14 — ExamQuestion**
-
-### **Purpose**
-
-Associates questions with examinations and stores exam-specific configuration.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| examQuestionId | BIGSERIAL | NO | Auto |
-| examId | BIGINT | NO | — |
-| questionId | BIGINT | NO | — |
-| questionOrder | INTEGER | NO | — |
-| marks | NUMERIC(5,2) | NO | — |
-| negativeMarks | NUMERIC(5,2) | NO | 0 |
-| isMandatory | BOOLEAN | NO | TRUE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* examQuestionId
-
-### **Foreign Keys**
-
-* examId → Exam(examId)  
-* questionId → Question(questionId)
-
-### **Unique Constraints**
-
-* (examId, questionId)  
-* (examId, questionOrder)
-
-### **Check Constraints**
-
-questionOrder \> 0
-
-marks \> 0
-
-negativeMarks \>= 0
-
-### **Indexes**
-
-PK(examQuestionId)
-
-UNIQUE(examId,questionId)
-
-UNIQUE(examId,questionOrder)
-
-INDEX(questionId)
-
-INDEX(examId)
-
-### **Delete Rule**
-
-* Exam → CASCADE  
-* Question → RESTRICT
-
----
-
-# **Question Bank Summary**
-
-| Table | Type |
-| ----- | ----- |
-| QuestionCategory | Master |
-| DifficultyLevel | Master |
-| Question | Master |
-| ExamQuestion | Mapping |
-
----
-
-# **Important Engineering Refinements**
-
-While reviewing the schema, I identified several improvements that I strongly recommend before freezing the database.
-
----
-
-## **Refinement 1 — Separate Question Options into a Dedicated Table**
-
-Instead of storing:
-
-optionA  
-optionB  
-optionC  
-optionD  
-correctOption
-
-I recommend introducing:
-
-QuestionOption  
-\------------  
-optionId  
-questionId  
-optionText  
-optionOrder  
-isCorrect
-
-### **Why?**
-
-* Supports any number of options (not limited to four).  
-* Better normalization (1NF).  
-* Easier to implement MSQ (Multiple Select Questions).  
-* Simpler randomization of options.  
-* Cleaner UI rendering.  
-* Future support for image/audio options.
-
-This aligns much better with our DB-005 normalization strategy.
-
----
-
-## **Refinement 2 — Question Versioning**
-
-Rather than editing questions directly, consider adding:
-
-versionNumber  
-isLatestVersion  
-parentQuestionId
-
-This preserves historical integrity for exams that have already been conducted.
-
----
-
-## **Refinement 3 — Media Support**
-
-Instead of embedding media URLs inside the Question table, introduce a future table:
-
-QuestionMedia
-
-mediaId  
-questionId  
-mediaType  
-filePath  
-displayOrder
-
-This supports:
-
-* Images  
-* Audio  
-* Video  
-* PDFs  
-* Diagrams
-
-without changing the Question schema.
-
----
-
-## **Refinement 4 — Question Metadata**
-
-Useful future additions include:
-
-* Bloom's Taxonomy Level  
-* Topic  
-* Subtopic  
-* Learning Outcome  
-* Language  
-* Estimated Difficulty Score (AI-generated)  
-* Usage Count (computed/cached)
-
-These are not required now but fit naturally into the design later.
-
----
-
-# **Part 3 Status: Complete ✅**
-
-At this point, the **Question Bank** is fully modeled and supports:
-
-* Categorized questions  
-* Difficulty classification  
-* Multiple question types  
-* Exam-specific question configuration  
-* Future extensibility for richer content
-
-The next section, **Part 4**, will define the core examination execution workflow:
-
-1. ExamAttempt  
-2. Answer  
-3. Evaluation  
-4. EvaluationDetail  
-5. Result
-
-This is the transactional heart of the Online Examination Platform, where examination delivery, submission, evaluation, and result generation are modeled.
-
-# **PART 4 — Examination Delivery, Evaluation & Result Database Specification**
-
-This section covers the following tables:
-
-1. ExamAttempt  
-2. Answer  
-3. Evaluation  
-4. EvaluationDetail  
-5. Result
-
-> **This is the core transactional subsystem of the Online Examination Platform.** These tables are responsible for recording the student's examination session, storing responses, evaluating submissions, and publishing results while maintaining consistency, integrity, and auditability.
-
----
-
-# **Table 15 — ExamAttempt**
-
-### **Purpose**
-
-Stores each attempt made by a candidate for a registered examination.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| attemptId | BIGSERIAL | NO | Auto |
-| registrationId | BIGINT | NO | — |
-| attemptNumber | SMALLINT | NO | 1 |
-| startTime | TIMESTAMPTZ | NO | NOW() |
-| endTime | TIMESTAMPTZ | YES | NULL |
-| submittedAt | TIMESTAMPTZ | YES | NULL |
-| status | VARCHAR(20) | NO | 'NOT\_STARTED' |
-| totalTimeSpentSeconds | INTEGER | YES | NULL |
-| ipAddress | INET | YES | NULL |
-| deviceInfo | TEXT | YES | NULL |
-| browserInfo | TEXT | YES | NULL |
-| submissionMethod | VARCHAR(30) | NO | 'MANUAL' |
-| autoSubmitted | BOOLEAN | NO | FALSE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* attemptId
-
-### **Foreign Keys**
-
-* registrationId → CandidateRegistration(registrationId)
-
-### **Unique Constraints**
-
-* (registrationId, attemptNumber)
-
-### **Check Constraints**
-
-attemptNumber \> 0
-
-status IN  
-('NOT\_STARTED','IN\_PROGRESS','SUBMITTED','AUTO\_SUBMITTED','EVALUATED','ABANDONED')
-
-submissionMethod IN  
-('MANUAL','AUTO\_TIMEOUT','SYSTEM')
-
-### **Indexes**
-
-PK(attemptId)
-
-INDEX(registrationId)
-
-INDEX(status)
-
-INDEX(startTime)
-
-UNIQUE(registrationId,attemptNumber)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 16 — Answer**
-
-### **Purpose**
-
-Stores every answer submitted by a student during an examination attempt.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| answerId | BIGSERIAL | NO | Auto |
-| attemptId | BIGINT | NO | — |
-| questionId | BIGINT | NO | — |
-| selectedOption | VARCHAR(20) | YES | NULL |
-| answerText | TEXT | YES | NULL |
-| isMarkedForReview | BOOLEAN | NO | FALSE |
-| isAnswered | BOOLEAN | NO | FALSE |
-| submittedAt | TIMESTAMPTZ | NO | NOW() |
-| timeSpentSeconds | INTEGER | NO | 0 |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* answerId
-
-### **Foreign Keys**
-
-* attemptId → ExamAttempt(attemptId)  
-* questionId → Question(questionId)
-
-### **Unique Constraints**
-
-* (attemptId, questionId)
-
-### **Check Constraints**
-
-timeSpentSeconds \>= 0
-
-### **Indexes**
-
-PK(answerId)
-
-INDEX(attemptId)
-
-INDEX(questionId)
-
-INDEX(isAnswered)
-
-INDEX(isMarkedForReview)
-
-UNIQUE(attemptId,questionId)
-
-### **Delete Rule**
-
-CASCADE from ExamAttempt
-
-RESTRICT from Question
-
----
-
-# **Table 17 — Evaluation**
-
-### **Purpose**
-
-Stores the overall evaluation summary of an examination attempt.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| evaluationId | BIGSERIAL | NO | Auto |
-| attemptId | BIGINT | NO | — |
-| totalMarksObtained | NUMERIC(6,2) | NO | 0 |
-| totalCorrect | INTEGER | NO | 0 |
-| totalWrong | INTEGER | NO | 0 |
-| totalSkipped | INTEGER | NO | 0 |
-| evaluationStatus | VARCHAR(20) | NO | 'PENDING' |
-| evaluatedBy | BIGINT | YES | NULL |
-| evaluatedAt | TIMESTAMPTZ | YES | NULL |
-| remarks | TEXT | YES | NULL |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* evaluationId
-
-### **Foreign Keys**
-
-* attemptId → ExamAttempt(attemptId)  
-* evaluatedBy → User(userId)
-
-### **Unique Constraints**
-
-* attemptId
-
-### **Check Constraints**
-
-totalMarksObtained \>= 0
-
-evaluationStatus IN  
-('PENDING','AUTO\_EVALUATED','MANUAL\_EVALUATED','FINALIZED')
-
-### **Indexes**
-
-PK(evaluationId)
-
-UNIQUE(attemptId)
-
-INDEX(evaluationStatus)
-
-INDEX(evaluatedAt)
-
-### **Delete Rule**
-
-CASCADE from ExamAttempt
-
----
-
-# **Table 18 — EvaluationDetail**
-
-### **Purpose**
-
-Stores question-wise evaluation details.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| evaluationDetailId | BIGSERIAL | NO | Auto |
-| evaluationId | BIGINT | NO | — |
-| questionId | BIGINT | NO | — |
-| marksAwarded | NUMERIC(5,2) | NO | 0 |
-| maxMarks | NUMERIC(5,2) | NO | — |
-| isCorrect | BOOLEAN | NO | FALSE |
-| evaluatorRemarks | TEXT | YES | NULL |
-| evaluatedAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* evaluationDetailId
-
-### **Foreign Keys**
-
-* evaluationId → Evaluation(evaluationId)  
-* questionId → Question(questionId)
-
-### **Unique Constraints**
-
-* (evaluationId, questionId)
-
-### **Check Constraints**
-
-marksAwarded \>= 0
-
-marksAwarded \<= maxMarks
-
-### **Indexes**
-
-PK(evaluationDetailId)
-
-INDEX(evaluationId)
-
-INDEX(questionId)
-
-UNIQUE(evaluationId,questionId)
-
-### **Delete Rule**
-
-CASCADE
-
----
-
-# **Table 19 — Result**
-
-### **Purpose**
-
-Stores the published examination result.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| resultId | BIGSERIAL | NO | Auto |
-| evaluationId | BIGINT | NO | — |
-| percentage | NUMERIC(5,2) | NO | — |
-| grade | VARCHAR(5) | YES | NULL |
-| passStatus | BOOLEAN | NO | FALSE |
-| publishedAt | TIMESTAMPTZ | YES | NULL |
-| publishedBy | BIGINT | YES | NULL |
-| isPublished | BOOLEAN | NO | FALSE |
-| remarks | TEXT | YES | NULL |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* resultId
-
-### **Foreign Keys**
-
-* evaluationId → Evaluation(evaluationId)  
-* publishedBy → User(userId)
-
-### **Unique Constraints**
-
-* evaluationId
-
-### **Check Constraints**
-
-percentage BETWEEN 0 AND 100
-
-### **Indexes**
-
-PK(resultId)
-
-UNIQUE(evaluationId)
-
-INDEX(isPublished)
-
-INDEX(passStatus)
-
-INDEX(publishedAt)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Examination Delivery Summary**
-
-| Table | Type |
-| ----- | ----- |
-| ExamAttempt | Transaction |
-| Answer | Transaction |
-| Evaluation | Transaction |
-| EvaluationDetail | Transaction |
-| Result | Transaction |
-
----
-
-# **Important Engineering Improvements (Recommended Before Freezing)**
-
-After reviewing this section against our architecture principles, I recommend the following refinements.
-
----
-
-## **1\. Replace `selectedOption` with `selectedOptionId`**
-
-Current schema:
-
-selectedOption
-
-Better:
-
-selectedOptionId
-
-This becomes even more valuable if we adopt the **QuestionOption** table recommended in Part 3\.
-
----
-
-## **2\. Remove `percentage` from Result**
-
-Percentage is a **derived value**.
-
-It can always be computed as:
-
-Marks Obtained / Total Marks × 100
-
-According to **DB-005 (Normalization Strategy)** and **Principle 12 (Measurable Improvements)**, derived values should generally not be permanently stored unless there is a demonstrated performance need.
-
-A better approach is to compute it during result generation or cache it if profiling shows it is expensive.
-
----
-
-## **3\. Add Attempt Integrity Information**
-
-To strengthen auditability and support future security features, consider adding:
-
-| Column | Type |
-| ----- | ----- |
-| systemSubmitted | BOOLEAN |
-| submissionReason | VARCHAR(50) |
-| lastSavedAt | TIMESTAMPTZ |
-
-This allows the system to distinguish between manual submissions, timeout submissions, and recovery scenarios.
-
----
-
-## **4\. Keep Evaluation Immutable After Finalization**
-
-Once `evaluationStatus = FINALIZED`, evaluation records should become immutable. Any correction should create a new revision or be handled through an explicit re-evaluation workflow rather than updating historical data.
-
----
-
-## **5\. Consider Moving `grade` to Business Logic**
-
-The `grade` value is also derived from marks and grading rules. Unless grading policies are expected to change historically, it may be better computed during publication rather than stored. If institutional policy requires preserving the exact published grade, storing it in `Result` is justified.
-
----
-
-# **Part 4 Status: Complete ✅**
-
-The examination execution pipeline is now fully modeled:
-
+Student M ───── N Exam  
+        through  
 CandidateRegistration  
-        │  
-        ▼  
+---
+
+# **13\. ExamAttempt**
+
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `AttemptID` | BIGINT | PK, AUTO\_INCREMENT |
+| `RegistrationID` | BIGINT | FK → CandidateRegistration |
+| `AttemptNumber` | SMALLINT | NOT NULL, \>= 1 |
+| `StartTime` | DATETIME | NOT NULL |
+| `EndTime` | DATETIME | NULL |
+| `SubmittedAt` | DATETIME | NULL |
+| `Status` | ENUM | NOT\_STARTED/IN\_PROGRESS/SUBMITTED/AUTO\_SUBMITTED/EVALUATED/ABANDONED |
+| `TotalTimeSpentSeconds` | INT | \>= 0 |
+| `IPAddress` | VARCHAR(45) | NULL |
+| `SubmissionMethod` | ENUM | MANUAL/AUTO |
+| `AutoSubmitted` | BOOLEAN | DEFAULT FALSE |
+
+### **Constraint**
+
+UNIQUE(RegistrationID, AttemptNumber)
+
+### **Relationship**
+
+CandidateRegistration 1 ───── M ExamAttempt  
+---
+
+# **14\. StudentAnswer**
+
+This is where I would make a **major correction** to your friend's original design.
+
+Do **not** store:
+
+isCorrect  
+marksAwarded
+
+as permanent answer facts if they can be derived during evaluation.
+
+Instead:
+
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `AnswerID` | BIGINT | PK, AUTO\_INCREMENT |
+| `AttemptID` | BIGINT | FK → ExamAttempt |
+| `QuestionID` | BIGINT | FK → Question |
+| `SelectedOptionID` | BIGINT | FK → QuestionOption, NULL |
+| `AnswerText` | TEXT | NULL |
+| `IsMarkedForReview` | BOOLEAN | DEFAULT FALSE |
+| `IsAnswered` | BOOLEAN | DEFAULT FALSE |
+| `SubmittedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
+| `TimeSpentSeconds` | INT | DEFAULT 0, \>= 0 |
+
+### **Constraint**
+
+UNIQUE(AttemptID, QuestionID)
+
+### **Relationship**
+
+ExamAttempt 1 ───── M StudentAnswer  
+Question 1 ───── M StudentAnswer  
+QuestionOption 1 ───── M StudentAnswer
+
+Evaluation happens in the Flask service.
+
+---
+
+# **15\. Result**
+
+We removed the separate `Evaluation` table.
+
+The Flask evaluation service calculates the result and stores the final result.
+
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `ResultID` | BIGINT | PK, AUTO\_INCREMENT |
+| `AttemptID` | BIGINT | FK → ExamAttempt, UNIQUE |
+| `TotalMarksObtained` | DECIMAL(6,2) | \>= 0 |
+| `Percentage` | DECIMAL(5,2) | 0–100 |
+| `TotalCorrect` | INT | \>= 0 |
+| `TotalWrong` | INT | \>= 0 |
+| `TotalSkipped` | INT | \>= 0 |
+| `Grade` | VARCHAR(5) | NULL |
+| `PassStatus` | BOOLEAN | NOT NULL |
+| `ResultStatus` | ENUM | GENERATED/PUBLISHED |
+| `PublishedAt` | DATETIME | NULL |
+| `PublishedBy` | BIGINT | FK → User, NULL |
+| `Remarks` | TEXT | NULL |
+
+### **Relationship**
+
+ExamAttempt 1 ───── 1 Result  
+User 1 ───── M Result
+
+`UNIQUE(AttemptID)` ensures one final result per attempt.
+
+---
+
+# **16\. Notification**
+
+The SRS explicitly includes notifications, so I would **not remove this table** just to lower the count.
+
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `NotificationID` | BIGINT | PK, AUTO\_INCREMENT |
+| `UserID` | BIGINT | FK → User |
+| `Title` | VARCHAR(150) | NOT NULL |
+| `Message` | TEXT | NOT NULL |
+| `NotificationType` | ENUM | EXAM/RESULT/SYSTEM/REMINDER |
+| `IsRead` | BOOLEAN | DEFAULT FALSE |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
+| `ReadAt` | DATETIME | NULL |
+| `IsActive` | BOOLEAN | DEFAULT TRUE |
+
+### **Relationship**
+
+User 1 ───── M Notification  
+---
+
+# **17\. AuditLog**
+
+Here's where we save a **significant number of tables**.
+
+Instead of:
+
+LoginLog  
+ExamLog  
+BrowserIntegrityLog  
+ConfigurationLog  
+BackupLog  
+AdminLog
+
+we use **one generic audit table**.
+
+The SRS requires audit information for authentication, user management, examination activities, browser integrity events, result publication, configuration changes, backup operations and administrative actions.
+
+| Attribute | Type | Constraints |
+| ----- | ----- | ----- |
+| `AuditLogID` | BIGINT | PK, AUTO\_INCREMENT |
+| `UserID` | BIGINT | FK → User, NULL |
+| `ExamAttemptID` | BIGINT | FK → ExamAttempt, NULL |
+| `Module` | VARCHAR(50) | NOT NULL |
+| `Action` | VARCHAR(50) | NOT NULL |
+| `EntityName` | VARCHAR(50) | NULL |
+| `RecordID` | BIGINT | NULL |
+| `Status` | VARCHAR(20) | NOT NULL |
+| `IPAddress` | VARCHAR(45) | NULL |
+| `Details` | TEXT | NULL |
+| `CreatedAt` | DATETIME | DEFAULT CURRENT\_TIMESTAMP |
+
+### **Examples**
+
+LOGIN  
+LOGOUT  
+USER\_CREATED  
+EXAM\_CREATED  
+EXAM\_SUBMITTED  
+RESULT\_PUBLISHED  
+TAB\_SWITCH  
+FULLSCREEN\_EXIT  
+WINDOW\_BLUR  
+BACKUP\_CREATED  
+BACKUP\_RESTORED
+
+For browser monitoring, the `ExamAttemptID` links the event to the specific examination attempt.
+
+That means **you do not need a separate BrowserIntegrityLog table**.
+
+---
+
+# **Final Relationships**
+
+Here's the clean ER relationship structure:
+
+                        ┌──────────┐  
+                         │   Role   │  
+                         └────┬─────┘  
+                              │ 1:M  
+                              ▼  
+                         ┌──────────┐  
+                         │   User   │  
+                         └────┬─────┘  
+                    ┌─────────┼─────────┐  
+                   1:1        │         1:M  
+                    │         │           │  
+              ┌─────▼─────┐   │      Notification  
+              │  Student   │   │  
+              └─────┬─────┘   │  
+                    │          │  
+                    │ M:1      │  
+                    ▼          │  
+              Department ◄─────┘  
+                    │  
+                    │ 1:M  
+                    ▼  
+                 Subject  
+                    │  
+                    │ 1:M  
+                    ▼  
+                  Exam  
+              ┌─────┼──────────────┐  
+              │     │              │  
+             1:M   1:M             1:M  
+              │     │              │  
+              ▼     ▼              ▼  
+        ExamSchedule ExamQuestion CandidateRegistration  
+                       │                    │  
+                       │ M:1                │ 1:M  
+                       ▼                    ▼  
+                    Question            ExamAttempt  
+                       │                 ┌───┴────┐  
+                       │ 1:M             │        │  
+                       ▼                 │        │  
+                QuestionOption          │        │  
+                                         │        │  
+                                         │        ▼  
+                                         │   StudentAnswer  
+                                         │  
+                                         ▼  
+                                       Result  
+                                           
+User ────────────────► AuditLog  
+ExamAttempt ─────────► AuditLog  
+---
+
+# **Views — Instead of More Tables**
+
+This is where your mentor's suggestion becomes useful.
+
+We **do not create tables** for these.
+
+### **`vw_question_paper`**
+
+Exam  
+\+  
+ExamQuestion  
+\+  
+Question  
+\+  
+QuestionOption
+
+Used to display the complete question paper.
+
+### **`vw_student_results`**
+
+Student  
+\+  
 ExamAttempt  
-        │  
-        ▼  
-Answer  
-        │  
-        ▼  
-Evaluation  
-        │  
-        ▼  
-EvaluationDetail  
-        │  
-        ▼  
-Result
+\+  
+Result  
+\+  
+Exam  
+\+  
+Subject
 
-This establishes a clear, auditable flow from registration through result publication.
+### **`vw_exam_statistics`**
 
-The final section, **Part 5**, will complete the database with:
+Calculates:
 
-1. Notification  
-2. NotificationTemplate  
-3. AuditLog  
-4. SystemEvent  
-5. PerformanceMetric  
-6. SystemConfiguration  
-7. FeatureFlag
+Total Candidates  
+Total Attempts  
+Average Marks  
+Highest Marks  
+Lowest Marks  
+Pass Count  
+Fail Count  
+Pass Percentage
 
-These tables support communication, auditing, monitoring, system configuration, and operational management.
+### **`vw_student_performance`**
 
-# **PART 5 — Notifications, Audit & Administration Database Specification**
+Calculates:
 
-This section completes the database design with the remaining **7 tables**.
+Exams Attempted  
+Average Marks  
+Highest Marks  
+Pass Count  
+Fail Count
 
-1. Notification  
-2. NotificationTemplate  
-3. AuditLog  
-4. SystemEvent  
-5. PerformanceMetric  
-6. SystemConfiguration  
-7. FeatureFlag
+### **`vw_browser_integrity`**
 
-These tables are responsible for system administration, monitoring, auditing, configuration, and communication.
+Reads relevant `AuditLog` records:
+
+WHERE Module \= 'EXAM\_MONITORING'
+
+So there is **no BrowserIntegrityLog table**.
 
 ---
 
-# **Table 20 — Notification**
+# **Triggers**
 
-### **Purpose**
+We should use triggers selectively, not for normal application business logic.
 
-Stores notifications delivered to users.
+### **Trigger 1 — Audit**
 
-### **Columns**
+For important database operations:
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| notificationId | BIGSERIAL | NO | Auto |
-| userId | BIGINT | NO | — |
-| templateId | BIGINT | YES | NULL |
-| title | VARCHAR(150) | NO | — |
-| message | TEXT | NO | — |
-| notificationType | VARCHAR(30) | NO | — |
-| deliveryChannel | VARCHAR(20) | NO | 'IN\_APP' |
-| priority | VARCHAR(20) | NO | 'NORMAL' |
-| isRead | BOOLEAN | NO | FALSE |
-| sentAt | TIMESTAMPTZ | NO | NOW() |
-| readAt | TIMESTAMPTZ | YES | NULL |
-| expiresAt | TIMESTAMPTZ | YES | NULL |
+INSERT/UPDATE  
+      ↓  
+AuditLog
 
-### **Primary Key**
+### **Trigger 2 — Result publication**
 
-* notificationId
+When:
 
-### **Foreign Keys**
+Result.ResultStatus
 
-* userId → User(userId)  
-* templateId → NotificationTemplate(templateId)
+changes to:
 
-### **Unique Constraints**
+PUBLISHED
 
-None
+an audit entry can be generated.
 
-### **Check Constraints**
+### **Trigger 3 — User status changes**
 
-notificationType IN
+When a user is deactivated:
 
-('EXAM','RESULT','SYSTEM','REMINDER','SECURITY')
+User.IsActive \= FALSE  
+       ↓  
+AuditLog
 
-deliveryChannel IN
-
-('IN\_APP','EMAIL','SMS')
-
-priority IN
-
-('LOW','NORMAL','HIGH','CRITICAL')
-
-### **Indexes**
-
-PK(notificationId)
-
-INDEX(userId)
-
-INDEX(isRead)
-
-INDEX(sentAt)
-
-INDEX(notificationType)
-
-### **Delete Rule**
-
-User → CASCADE
-
-Template → SET NULL
+The rest of the business logic should remain in Flask.
 
 ---
 
-# **Table 21 — NotificationTemplate**
+# **Why this is 3NF**
 
-### **Purpose**
+The important point is that we're **not reducing tables by randomly combining unrelated data**.
 
-Stores reusable notification templates.
+For example:
 
-### **Columns**
+UserID → FirstName, LastName, Email, RoleID
 
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| templateId | BIGSERIAL | NO | Auto |
-| templateName | VARCHAR(100) | NO | — |
-| notificationType | VARCHAR(30) | NO | — |
-| subject | VARCHAR(150) | YES | NULL |
-| templateBody | TEXT | NO | — |
-| isActive | BOOLEAN | NO | TRUE |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
+and:
 
-### **Primary Key**
+DepartmentID → DepartmentName
 
-* templateId
+and:
 
-### **Foreign Keys**
+SubjectID → SubjectName, DepartmentID
 
-None
+and:
 
-### **Unique Constraints**
+ExamID → ExamTitle, SubjectID, Duration...
 
-* templateName
+Each non-key attribute depends on the key of its relation and not on another non-key attribute.
 
-### **Check Constraints**
+The many-to-many relationships are separated through:
 
-None
+ExamQuestion  
+CandidateRegistration
 
-### **Indexes**
+which prevents repeating groups and unnecessary duplication.
 
-PK(templateId)
-
-UNIQUE(templateName)
-
-INDEX(notificationType)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 22 — AuditLog**
-
-### **Purpose**
-
-Maintains immutable security and activity audit records.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| auditLogId | BIGSERIAL | NO | Auto |
-| userId | BIGINT | YES | NULL |
-| entityName | VARCHAR(100) | NO | — |
-| entityId | BIGINT | YES | NULL |
-| action | VARCHAR(30) | NO | — |
-| oldValue | JSONB | YES | NULL |
-| newValue | JSONB | YES | NULL |
-| ipAddress | INET | YES | NULL |
-| timestamp | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* auditLogId
-
-### **Foreign Keys**
-
-* userId → User(userId)
-
-### **Unique Constraints**
-
-None
-
-### **Check Constraints**
-
-action IN
-
-('CREATE','UPDATE','DELETE','LOGIN','LOGOUT','VIEW','EXPORT')
-
-### **Indexes**
-
-PK(auditLogId)
-
-INDEX(userId)
-
-INDEX(entityName)
-
-INDEX(action)
-
-INDEX(timestamp)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 23 — SystemEvent**
-
-### **Purpose**
-
-Stores significant application events.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| eventId | BIGSERIAL | NO | Auto |
-| eventType | VARCHAR(50) | NO | — |
-| severity | VARCHAR(20) | NO | — |
-| sourceModule | VARCHAR(50) | NO | — |
-| description | TEXT | NO | — |
-| occurredAt | TIMESTAMPTZ | NO | NOW() |
-| resolvedAt | TIMESTAMPTZ | YES | NULL |
-| status | VARCHAR(20) | NO | 'OPEN' |
-
-### **Primary Key**
-
-* eventId
-
-### **Foreign Keys**
-
-None
-
-### **Unique Constraints**
-
-None
-
-### **Check Constraints**
-
-severity IN
-
-('INFO','WARNING','ERROR','CRITICAL')
-
-status IN
-
-('OPEN','ACKNOWLEDGED','RESOLVED')
-
-### **Indexes**
-
-PK(eventId)
-
-INDEX(eventType)
-
-INDEX(severity)
-
-INDEX(status)
-
-INDEX(occurredAt)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 24 — PerformanceMetric**
-
-### **Purpose**
-
-Stores runtime performance statistics.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| metricId | BIGSERIAL | NO | Auto |
-| metricName | VARCHAR(100) | NO | — |
-| metricValue | NUMERIC(12,4) | NO | — |
-| metricUnit | VARCHAR(20) | NO | — |
-| sourceModule | VARCHAR(50) | NO | — |
-| recordedAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* metricId
-
-### **Foreign Keys**
-
-None
-
-### **Unique Constraints**
-
-None
-
-### **Check Constraints**
-
-metricValue \>= 0
-
-### **Indexes**
-
-PK(metricId)
-
-INDEX(metricName)
-
-INDEX(sourceModule)
-
-INDEX(recordedAt)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 25 — SystemConfiguration**
-
-### **Purpose**
-
-Stores configurable system parameters.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| configurationId | BIGSERIAL | NO | Auto |
-| configurationKey | VARCHAR(100) | NO | — |
-| configurationValue | TEXT | NO | — |
-| valueType | VARCHAR(20) | NO | — |
-| description | TEXT | YES | NULL |
-| isEditable | BOOLEAN | NO | TRUE |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-| updatedBy | BIGINT | YES | NULL |
-
-### **Primary Key**
-
-* configurationId
-
-### **Foreign Keys**
-
-* updatedBy → User(userId)
-
-### **Unique Constraints**
-
-* configurationKey
-
-### **Check Constraints**
-
-valueType IN
-
-('STRING','INTEGER','BOOLEAN','DECIMAL','JSON')
-
-### **Indexes**
-
-PK(configurationId)
-
-UNIQUE(configurationKey)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Table 26 — FeatureFlag**
-
-### **Purpose**
-
-Controls enabling and disabling application features without code changes.
-
-### **Columns**
-
-| Column | Data Type | Null | Default |
-| ----- | ----- | ----- | ----- |
-| featureFlagId | BIGSERIAL | NO | Auto |
-| flagName | VARCHAR(100) | NO | — |
-| description | TEXT | YES | NULL |
-| isEnabled | BOOLEAN | NO | FALSE |
-| rolloutPercentage | SMALLINT | NO | 100 |
-| createdAt | TIMESTAMPTZ | NO | NOW() |
-| updatedAt | TIMESTAMPTZ | NO | NOW() |
-
-### **Primary Key**
-
-* featureFlagId
-
-### **Foreign Keys**
-
-None
-
-### **Unique Constraints**
-
-* flagName
-
-### **Check Constraints**
-
-rolloutPercentage BETWEEN 0 AND 100
-
-### **Indexes**
-
-PK(featureFlagId)
-
-UNIQUE(flagName)
-
-INDEX(isEnabled)
-
-### **Delete Rule**
-
-RESTRICT
-
----
-
-# **Administration & Monitoring Summary**
-
-| Table | Type |
-| ----- | ----- |
-| Notification | Transaction |
-| NotificationTemplate | Master |
-| AuditLog | Audit |
-| SystemEvent | Monitoring |
-| PerformanceMetric | Monitoring |
-| SystemConfiguration | Configuration |
-| FeatureFlag | Configuration |
-
----
-
-# **Complete Database Summary**
-
-| Category | Tables |
-| ----- | ----- |
-| Identity & Access | 6 |
-| Academic & Examination | 4 |
-| Question Bank | 4 |
-| Examination Execution | 5 |
-| Administration & Monitoring | 7 |
-| **Total** | **26 Tables** |
-
----
-
-# **Overall Review & Recommendations**
-
-Now that all 26 tables have been defined, I would make three architectural refinements before freezing the schema:
-
-### **1\. Normalize Question Options**
-
-Instead of storing `optionA`, `optionB`, `optionC`, and `optionD` in the `Question` table, introduce a separate `QuestionOption` table. This supports any number of options, multiple-correct-answer questions, and future media-based options while improving normalization.
-
-### **2\. Introduce Specialized Profile Tables**
-
-Keep `User` as the authentication entity and add role-specific profile tables such as `StudentProfile` and `FacultyProfile` if additional attributes become necessary. This avoids cluttering the `User` table while maintaining a clean identity model.
-
-### **3\. Expand Monitoring for KPI Evaluation**
-
-Since your project emphasizes KPIs like response time, concurrency, and resource utilization, `PerformanceMetric` can later be extended to capture metrics such as API latency, CPU usage, memory usage, concurrent sessions, database query times, cache hit ratios, and thread pool statistics. This will directly support the measurable optimization goals defined in your project philosophy.
-
----
-
-## **DB-006 Status**
-
-With Parts 1–5 complete, **DB-006 (Physical Schema Design)** is now complete from a structural perspective. The next logical database phase is **DB-007 — Constraints & Data Integrity**, where we'll formalize referential actions, business constraints, transaction rules, and integrity mechanisms across the entire schema before moving on to indexing and performance optimization.
+The SRS itself requires normalization up to 3NF where appropriate and emphasizes PK/FK integrity, uniqueness, checks, indexing and transactions.
 
 # TechStack
 
