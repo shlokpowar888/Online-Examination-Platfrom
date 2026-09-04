@@ -1,5 +1,6 @@
 # Netlify Route Rewrites for Static Deployment
 /student/dashboard.html          /templates/student/dashboard.html          200
+/student/profile.html            /templates/student/profile.html            200
 /student/results/list.html       /templates/student/results/list.html       200
 /student/results/detail.html     /templates/student/results/detail.html     200
 /student/exams/available.html    /templates/student/exams/available.html    200
@@ -8,6 +9,7 @@
 /student/help.html               /templates/student/help.html               200
 
 /faculty/dashboard.html          /templates/faculty/dashboard.html          200
+/faculty/profile.html            /templates/faculty/profile.html            200
 /questions/list.html             /templates/questions/list.html             200
 /questions/create.html           /templates/questions/create.html           200
 /questions/edit.html             /templates/questions/edit.html             200
@@ -27,6 +29,7 @@
 /subjects/edit.html              /templates/subjects/edit.html              200
 
 /admin/dashboard.html            /templates/admin/dashboard.html            200
+/admin/profile.html              /templates/admin/profile.html              200
 /admin/users/list.html           /templates/admin/users/list.html           200
 /admin/users/create.html         /templates/admin/users/create.html         200
 /admin/users/edit.html           /templates/admin/users/edit.html           200

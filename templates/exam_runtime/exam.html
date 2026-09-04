@@ -207,25 +207,35 @@
           </div>
         </div>
 
-        <!-- ================= QUESTION 4 (TRUE/FALSE) ================= -->
+        <!-- ================= QUESTION 4 (MCQ) ================= -->
         <div class="glass-card p-4 question-card d-none" id="qCard-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="badge bg-info text-dark fs-6">Question 4 of 5</span>
-            <span class="text-muted small">1.00 Mark &bull; True / False</span>
+            <span class="badge bg-primary fs-6">Question 4 of 5</span>
+            <span class="text-muted small">2.00 Marks &bull; Single Choice (MCQ)</span>
           </div>
 
-          <h5 class="fw-bold mb-4 text-dark">In SQL, a Primary Key can accept a single NULL value.</h5>
+          <h5 class="fw-bold mb-4 text-dark">Which SQL constraint uniquely identifies each record in a database table and enforces NOT NULL automatically?</h5>
 
           <div class="d-flex flex-column gap-3 mb-4">
             <label class="p-3 rounded border section-bg d-flex align-items-center gap-3 cursor-pointer option-item">
               <input type="radio" name="q4_opts" value="A" onchange="handleAnswerChange(4)">
               <span class="badge-option-letter font-monospace px-2 py-1 rounded">A</span>
-              <span class="fw-medium text-dark">True</span>
+              <span class="fw-medium text-dark">FOREIGN KEY</span>
             </label>
             <label class="p-3 rounded border section-bg d-flex align-items-center gap-3 cursor-pointer option-item">
               <input type="radio" name="q4_opts" value="B" onchange="handleAnswerChange(4)">
               <span class="badge-option-letter font-monospace px-2 py-1 rounded">B</span>
-              <span class="fw-medium text-dark">False</span>
+              <span class="fw-medium text-dark">PRIMARY KEY</span>
+            </label>
+            <label class="p-3 rounded border section-bg d-flex align-items-center gap-3 cursor-pointer option-item">
+              <input type="radio" name="q4_opts" value="C" onchange="handleAnswerChange(4)">
+              <span class="badge-option-letter font-monospace px-2 py-1 rounded">C</span>
+              <span class="fw-medium text-dark">UNIQUE</span>
+            </label>
+            <label class="p-3 rounded border section-bg d-flex align-items-center gap-3 cursor-pointer option-item">
+              <input type="radio" name="q4_opts" value="D" onchange="handleAnswerChange(4)">
+              <span class="badge-option-letter font-monospace px-2 py-1 rounded">D</span>
+              <span class="fw-medium text-dark">CHECK</span>
             </label>
           </div>
 

@@ -52,10 +52,18 @@ def student_history():
 def student_help():
     return render_template('student/help.html')
 
+@app.route('/student/profile.html')
+def student_profile():
+    return render_template('student/profile.html')
+
 # Faculty Portal Routes
 @app.route('/faculty/dashboard.html')
 def faculty_dashboard():
     return render_template('faculty/dashboard.html')
+
+@app.route('/faculty/profile.html')
+def faculty_profile():
+    return render_template('faculty/profile.html')
 
 @app.route('/questions/list.html')
 def questions_list():
@@ -118,6 +126,10 @@ def evaluation_results_publish():
 @app.route('/admin/dashboard.html')
 def admin_dashboard():
     return render_template('admin/dashboard.html')
+
+@app.route('/admin/profile.html')
+def admin_profile():
+    return render_template('admin/profile.html')
 
 @app.route('/admin/users/list.html')
 def admin_users():

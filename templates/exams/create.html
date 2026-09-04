@@ -115,7 +115,7 @@
         <i class="bi bi-chevron-down ms-1 text-muted" style="font-size: 0.75rem;"></i>
       </div>
       <ul class="dropdown-menu dropdown-menu-end shadow border mt-2">
-        <li><a class="dropdown-item" href="/faculty/dashboard.html"><i class="bi bi-person-badge me-2"></i>Faculty Profile</a></li>
+        <li><a class="dropdown-item" href="/faculty/profile.html"><i class="bi bi-person-badge me-2"></i>Faculty Profile</a></li>
           <li><a class="dropdown-item" href="/reports/exam_report.html"><i class="bi bi-bar-chart-line me-2"></i>Performance Reports</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item text-danger" href="/auth/login.html"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
@@ -192,8 +192,7 @@
         <div class="col-md-6">
           <label class="form-label small fw-semibold text-dark">Assessment Type</label>
           <select class="form-select form-control-custom" id="wizType">
-            <option value="OBJECTIVE">OBJECTIVE (MCQ / MSQ Evaluation)</option>
-            <option value="SUBJECTIVE">SUBJECTIVE (Descriptive Assessment)</option>
+            <option value="OBJECTIVE" selected>OBJECTIVE (MCQ & MSQ Only)</option>
           </select>
         </div>
         <div class="col-md-6">
@@ -384,18 +383,18 @@
               <td class="font-monospace fw-bold">4.00</td>
             </tr>
             <tr>
-              <td><input class="form-check-input q-wiz-check" type="checkbox" checked data-marks="4.00" onchange="updateWizMarks()"></td>
-              <td class="fw-semibold text-dark">Explain the difference between 2NF and 3NF normalization.</td>
-              <td><span class="badge bg-secondary">Short Answer</span></td>
+              <td><input class="form-check-input q-wiz-check" type="checkbox" checked data-marks="2.00" onchange="updateWizMarks()"></td>
+              <td class="fw-semibold text-dark">Which normal form strictly eliminates transitive functional dependencies?</td>
+              <td><span class="badge bg-primary">MCQ</span></td>
               <td><span class="badge bg-warning text-dark">Medium</span></td>
-              <td class="font-monospace fw-bold">4.00</td>
+              <td class="font-monospace fw-bold">2.00</td>
             </tr>
             <tr>
-              <td><input class="form-check-input q-wiz-check" type="checkbox" data-marks="5.00" onchange="updateWizMarks()"></td>
-              <td class="fw-semibold text-dark">Describe deadlock detection algorithms in relational databases.</td>
-              <td><span class="badge bg-danger">Descriptive</span></td>
+              <td><input class="form-check-input q-wiz-check" type="checkbox" data-marks="4.00" onchange="updateWizMarks()"></td>
+              <td class="fw-semibold text-dark">Which of the following are valid relational algebra fundamental operators? (Select all that apply)</td>
+              <td><span class="badge bg-purple" style="background-color: var(--accent-purple);">MSQ</span></td>
               <td><span class="badge bg-danger">Hard</span></td>
-              <td class="font-monospace fw-bold">5.00</td>
+              <td class="font-monospace fw-bold">4.00</td>
             </tr>
           </tbody>
         </table>
