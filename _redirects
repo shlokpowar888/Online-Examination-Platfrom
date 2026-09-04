@@ -4,6 +4,8 @@
 /student/results/detail.html     /templates/student/results/detail.html     200
 /student/exams/available.html    /templates/student/exams/available.html    200
 /student/exams/registered.html   /templates/student/exams/registered.html   200
+/student/history.html            /templates/student/history.html            200
+/student/help.html               /templates/student/help.html               200
 
 /faculty/dashboard.html          /templates/faculty/dashboard.html          200
 /questions/list.html             /templates/questions/list.html             200
@@ -14,6 +16,7 @@
 /exams/edit.html                 /templates/exams/edit.html                 200
 /exams/detail.html               /templates/exams/detail.html               200
 /exams/schedule.html             /templates/exams/schedule.html             200
+/exams/monitor.html              /templates/exams/monitor.html              200
 /exams/questions/assign.html     /templates/exams/questions/assign.html     200
 /evaluation/pending.html         /templates/evaluation/pending.html         200
 /evaluation/evaluate.html        /templates/evaluation/evaluate.html        200
