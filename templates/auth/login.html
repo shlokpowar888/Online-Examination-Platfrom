@@ -67,9 +67,13 @@
       <i class="bi bi-shield-lock-fill me-1"></i> Account locked due to excessive failed login attempts. Contact administrator.
     </div>
 
-    <!-- Role Quick Switcher -->
+    <!-- Role Quick Switcher (Demo Environment Only) -->
     <div class="mb-4">
-      <label class="form-label small text-muted fw-semibold">Select Role / Demo Account</label>
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <label class="form-label small text-muted fw-semibold m-0">
+          <i class="bi bi-key-fill text-warning me-1"></i> Quick Demo Selector <span class="badge bg-light text-muted border">Prototype</span>
+        </label>
+      </div>
       <div class="d-flex gap-2">
         <button type="button" class="role-nav-btn active" id="btn-student" onclick="setRole('student')">
           <i class="bi bi-person-fill"></i> Student

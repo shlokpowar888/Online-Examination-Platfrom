@@ -44,10 +44,26 @@ def student_results():
 def student_result_detail():
     return render_template('student/results/detail.html')
 
+@app.route('/student/history.html')
+def student_history():
+    return render_template('student/history.html')
+
+@app.route('/student/help.html')
+def student_help():
+    return render_template('student/help.html')
+
+@app.route('/student/profile.html')
+def student_profile():
+    return render_template('student/profile.html')
+
 # Faculty Portal Routes
 @app.route('/faculty/dashboard.html')
 def faculty_dashboard():
     return render_template('faculty/dashboard.html')
+
+@app.route('/faculty/profile.html')
+def faculty_profile():
+    return render_template('faculty/profile.html')
 
 @app.route('/questions/list.html')
 def questions_list():
@@ -81,6 +97,10 @@ def exams_detail():
 def exams_schedule():
     return render_template('exams/schedule.html')
 
+@app.route('/exams/monitor.html')
+def exams_monitor():
+    return render_template('exams/monitor.html')
+
 @app.route('/exams/questions/assign.html')
 def exams_assign():
     return render_template('exams/questions/assign.html')
@@ -106,6 +126,10 @@ def evaluation_results_publish():
 @app.route('/admin/dashboard.html')
 def admin_dashboard():
     return render_template('admin/dashboard.html')
+
+@app.route('/admin/profile.html')
+def admin_profile():
+    return render_template('admin/profile.html')
 
 @app.route('/admin/users/list.html')
 def admin_users():

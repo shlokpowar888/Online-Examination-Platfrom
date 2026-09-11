@@ -118,6 +118,61 @@ function reindexOptions() {
   });
 }
 
+// Table search and filter utility
+function filterTable(tableId, searchInputId, columnIndex = -1) {
+  const input = document.getElementById(searchInputId);
+  const table = document.getElementById(tableId);
+  if (!input || !table) return;
+
+  const filter = input.value.toLowerCase().trim();
+  const rows = table.querySelectorAll('tbody tr');
+
+  rows.forEach(row => {
+    if (columnIndex >= 0) {
+      const cell = row.cells[columnIndex];
+      const text = cell ? cell.textContent.toLowerCase() : '';
+      row.style.display = text.includes(filter) ? '' : 'none';
+    } else {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(filter) ? '' : 'none';
+    }
+  });
+}
+
+// Wizard Step Navigation
+function switchStep(stepNumber, maxSteps = 5) {
+  for (let i = 1; i <= maxSteps; i++) {
+    const stepEl = document.getElementById(`step-${i}`);
+    const tabBtn = document.getElementById(`step-tab-${i}`) || document.getElementById(`tab${i}-btn`);
+    if (stepEl) {
+      stepEl.classList.toggle('d-none', i !== stepNumber);
+    }
+    if (tabBtn) {
+      tabBtn.classList.toggle('active', i === stepNumber);
+      if (i < stepNumber) {
+        tabBtn.classList.add('completed');
+      }
+    }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Autosave Simulation Indicator
+function triggerAutosave(status = 'saving') {
+  const pill = document.getElementById('autosavePill');
+  const textEl = document.getElementById('autosaveText');
+  if (!pill) return;
+
+  if (status === 'saving') {
+    pill.className = 'autosave-pill saving';
+    if (textEl) textEl.textContent = 'Saving answer...';
+    setTimeout(() => {
+      pill.className = 'autosave-pill';
+      if (textEl) textEl.textContent = 'Answer Saved';
+    }, 450);
+  }
+}
+
 // Global initialization
 document.addEventListener('DOMContentLoaded', () => {
   // Add mobile menu button to navbar if not exists
@@ -130,3 +185,4 @@ document.addEventListener('DOMContentLoaded', () => {
     navbar.insertBefore(btn, navbar.firstChild);
   }
 });
+

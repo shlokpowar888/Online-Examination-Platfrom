@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Examination Results - MMCOE Student Portal</title>
+  <title>Examination Guidelines & Support - MMCOE Student Portal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/static/css/styles.css">
@@ -39,7 +39,7 @@
       </a>
     </div>
     <div class="nav-item">
-      <a href="/student/results/list.html" class="nav-link active">
+      <a href="/student/results/list.html" class="nav-link ">
         <i class="bi bi-trophy-fill"></i>
         <span>My Results</span>
       </a>
@@ -51,7 +51,7 @@
       </a>
     </div>
     <div class="nav-item">
-      <a href="/student/help.html" class="nav-link ">
+      <a href="/student/help.html" class="nav-link active">
         <i class="bi bi-question-circle-fill"></i>
         <span>Help & Exam Rules</span>
       </a>
@@ -123,128 +123,63 @@
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb small">
     <li class="breadcrumb-item"><a href="/student/dashboard.html">Student</a></li>
-    <li class="breadcrumb-item active" aria-current="page">My Results</li>
+    <li class="breadcrumb-item active" aria-current="page">Help & Rules</li>
   </ol>
 </nav>
 
 <!-- Page Header -->
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
-  <div>
-    <h3 class="fw-bold m-0 text-dark">Official Academic Results & Transcripts</h3>
-    <p class="text-muted small m-0">Review verified assessment grades, answer evaluations, and faculty feedback</p>
-  </div>
-  <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">
-    <i class="bi bi-printer me-1"></i> Print Transcript
-  </button>
+<div class="mb-4">
+  <h3 class="fw-bold m-0 text-dark">Online Examination Rules & Technical Guidelines</h3>
+  <p class="text-muted small m-0">Policies, proctoring requirements, technical troubleshooting, and institutional support</p>
 </div>
 
-<!-- Published Results Section -->
-<div class="glass-card p-4 mb-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-bold m-0 text-dark"><i class="bi bi-award-fill text-emerald me-2"></i>Published Examination Results</h5>
-    <span class="status-badge badge-active"><i class="bi bi-check-circle-fill"></i> Officially Released</span>
-  </div>
+<!-- Rules & Guidelines Accordion / Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-8">
+    <div class="glass-card p-4 mb-4">
+      <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-check text-primary me-2"></i>Academic Code of Conduct</h5>
+      
+      <div class="d-flex flex-column gap-3 small">
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">1. Fullscreen Enforcement</h6>
+          <p class="text-muted m-0">The examination runtime initiates in mandatory fullscreen. Departing fullscreen triggers an immediate cautionary toast and notifies the faculty proctor via the real-time telemetry stream.</p>
+        </div>
 
-  <div class="table-responsive">
-    <table class="table table-hover align-middle small mb-0">
-      <thead>
-        <tr class="text-muted border-bottom">
-          <th>Exam Code & Title</th>
-          <th>Course Subject</th>
-          <th>Completed Datetime</th>
-          <th>Score Obtained</th>
-          <th>Percentage</th>
-          <th>Grade & Status</th>
-          <th class="text-end">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <div class="fw-bold text-dark">Software Engineering Unit Test</div>
-            <span class="font-monospace text-muted" style="font-size: 0.725rem;">EXAM-SE-UT1</span>
-          </td>
-          <td><span class="badge bg-light text-dark border">CS100</span></td>
-          <td class="text-muted">25 Aug 2026, 11:45 AM</td>
-          <td><strong class="text-dark font-monospace fs-6">90.00</strong> / 100.00</td>
-          <td><strong class="text-emerald">90.0%</strong></td>
-          <td>
-            <span class="badge bg-success">Grade A+ (Distinction)</span>
-          </td>
-          <td class="text-end">
-            <a href="/student/results/detail.html" class="btn btn-primary-custom btn-sm py-1 px-3">
-              <i class="bi bi-file-earmark-text me-1"></i> Detailed Analysis &rarr;
-            </a>
-          </td>
-        </tr>
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">2. Tab Switching & Focus Loss Detection</h6>
+          <p class="text-muted m-0">Opening alternate browser tabs, switching applications, or interacting with background windows is strictly prohibited and logged with timestamp and duration metrics in the immutable audit ledger.</p>
+        </div>
 
-        <tr>
-          <td>
-            <div class="fw-bold text-dark">Data Structures & Algorithms Practical</div>
-            <span class="font-monospace text-muted" style="font-size: 0.725rem;">EXAM-DSA-PRAC</span>
-          </td>
-          <td><span class="badge bg-light text-dark border">CS099</span></td>
-          <td class="text-muted">15 Aug 2026, 04:30 PM</td>
-          <td><strong class="text-dark font-monospace fs-6">88.00</strong> / 100.00</td>
-          <td><strong class="text-emerald">88.0%</strong></td>
-          <td>
-            <span class="badge bg-success">Grade A</span>
-          </td>
-          <td class="text-end">
-            <a href="/student/results/detail.html" class="btn btn-outline-info btn-sm py-1 px-3">
-              <i class="bi bi-file-earmark-text me-1"></i> Detailed Analysis &rarr;
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">3. Server-Side Continuous Autosave</h6>
+          <p class="text-muted m-0">Your answers are transmitted and persisted to the institutional database upon every radio button or checkbox interaction. In the event of network disruption, you can reconnect without losing previously saved responses.</p>
+        </div>
 
-<!-- Pending Evaluations Section -->
-<div class="glass-card p-4 mb-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <div>
-      <h5 class="fw-bold m-0 text-dark"><i class="bi bi-hourglass-split text-warning me-2"></i>Pending Faculty Evaluation</h5>
-      <p class="text-muted small m-0">Assessments completed by you currently awaiting faculty review or official batch publication</p>
+        <div class="p-3 rounded border section-bg">
+          <h6 class="fw-bold text-dark mb-1">4. Server Countdown Expiry</h6>
+          <p class="text-muted m-0">Exam timers run synchronously against server time. When the scheduled time reaches zero, active submissions are sealed and submitted automatically.</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-hover align-middle small mb-0">
-      <thead>
-        <tr class="text-muted border-bottom">
-          <th>Exam Code & Title</th>
-          <th>Course Subject</th>
-          <th>Submitted Time</th>
-          <th>Lead Evaluator</th>
-          <th>Progress Stage</th>
-          <th class="text-end">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <div class="fw-bold text-dark">DBMS Mid-Term Assessment</div>
-            <span class="font-monospace text-muted" style="font-size: 0.725rem;">EXAM-DBMS-MID</span>
-          </td>
-          <td><span class="badge bg-light text-dark border">CS101</span></td>
-          <td class="text-muted">Today, 02:30 PM</td>
-          <td>Dr. Rajesh Sharma</td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <div class="progress flex-grow-1" style="height: 6px;">
-                <div class="progress-bar bg-warning" style="width: 75%;"></div>
-              </div>
-              <span class="text-muted" style="font-size: 0.75rem;">Faculty Audit</span>
-            </div>
-          </td>
-          <td class="text-end">
-            <span class="status-badge badge-pending">EVALUATION IN PROGRESS</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="col-lg-4">
+    <div class="glass-card p-4 mb-4">
+      <h6 class="fw-bold text-dark mb-3"><i class="bi bi-headset text-danger me-2"></i>Technical Support & Helpdesk</h6>
+      <p class="text-muted small mb-3">Encountering browser issues or network interruptions during live assessments?</p>
+      
+      <div class="p-3 rounded border section-bg small mb-3">
+        <div class="fw-semibold text-dark mb-1">IT Examination Cell</div>
+        <div class="text-muted">MMCOE Ground Floor, Computer Lab 3</div>
+        <div class="text-dark mt-1"><i class="bi bi-telephone me-1 text-primary"></i> 020-2547-1002</div>
+        <div class="text-dark"><i class="bi bi-envelope me-1 text-primary"></i> examcell@mmcoe.edu.in</div>
+      </div>
+
+      <div class="p-3 rounded border bg-light small text-muted">
+        <strong>Supported Browsers:</strong><br>
+        Google Chrome (v90+), Microsoft Edge (v90+), Mozilla Firefox (v88+). Ensure popup blockers are disabled.
+      </div>
+    </div>
   </div>
 </div>
       </main>
